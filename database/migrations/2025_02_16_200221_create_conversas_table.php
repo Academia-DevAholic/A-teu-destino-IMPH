@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('conversas', function (Blueprint $table) {
             $table->id();
-            $table->id('cliente');
-            $table->id('entregador');
-            $table->string('mensagens');
-            $table->string('status');
+            $table->integer('id_entregador')->constrained('entregadores');
+            $table->integer('id_cliente')->constrained('clientes');
+            $table->text('mensagens');
+            $table->enum('status', ['pendente', 'concluída', 'em andamento']); 
+
             $table->timestamps();
         });
     }

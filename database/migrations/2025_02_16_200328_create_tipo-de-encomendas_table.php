@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('tipo-de-encomendas', function (Blueprint $table) {
             $table->id();
-            $table->id();
-            $table->id();
+            $table->string('tipo');
+            $table->text('descricao');
+           
             $table->timestamps();
         });
     }
