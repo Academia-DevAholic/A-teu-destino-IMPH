@@ -19,4 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 
 });
+
+//===========CRUD de Cliente===========//
 Route::get('/listar_cliente', [ClienteController::class, 'index']);
+Route::post('/cadastro_cliente', [ClienteController::class, 'store']);
