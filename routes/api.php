@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Htt\Controllers\VeiculoControler;
+use App\Http\Controllers\VeiculoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 });
 Route::get('listar_veiculo', [VeiculoController::class, 'index']);
+Route::post('cadastro_veiculo', [VeiculoController::class, 'store']);

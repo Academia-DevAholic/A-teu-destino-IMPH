@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Htt\Models\Veiculo;
+use App\Models\Veiculo;
 
 class VeiculoController extends Controller
 {
@@ -13,24 +13,24 @@ class VeiculoController extends Controller
     // Metodo para listar 
     public function index()
     {
+    
        $veiculo=Veiculo::all();
        return $veiculo;
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
+     // Metodo para cadastrar o veiculo(metodo_criar)
     public function store(Request $request)
     {
-        //
+        $veiculo=new Veiculo();
+        $veiculo->id_tipo_veiculo=$request->id_tipo_veiculo;
+        $veiculo->id_tipo_entregador=$request->id_tipo_entregador;
+        $veiculo->marca=$request->marca;
+        $veiculo->modelo=$request->modelo;
+        $veiculo->ducumento=$request->documento;
+        $veiculo->matricula=$request->matricula;
     }
 
     /**
