@@ -7,9 +7,7 @@ use App\Models\Encomenda;
 
 class EncomendaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    //Metodo para listar encomenda.
     public function index(){
         
         $encomenda=Encomenda::all();
@@ -25,9 +23,7 @@ class EncomendaController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    //metodo para cadastro de encomenda.
     public function store(Request $request){
     
         $encomenda= new Encomenda();
@@ -44,9 +40,8 @@ class EncomendaController extends Controller
         return "cadastro bem sucedido!";
     }
 
-    /**
-     * Display the specified resource.
-     */
+    
+    //Metodo para detalhar encomenda.
     public function show(string $id)
     {
         $encomenda=encomenda::find($id);
@@ -61,9 +56,7 @@ class EncomendaController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    //Metodo para atualizar encomenda.
     public function update(Request $request, string $id)
     {
         $encomenda=encomenda::find($id);
@@ -80,9 +73,7 @@ class EncomendaController extends Controller
         return "atualizado com sucesso!";
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    //metodo para eliminar encomenda.
     public function destroy(string $id)
     {
         $encomenda=encomenda::find($id);

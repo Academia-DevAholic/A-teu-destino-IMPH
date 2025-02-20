@@ -8,7 +8,7 @@ use App\Models\Entregador;
 
 class EntregadorController extends Controller
 {
-     //Metodo para listar entregador
+     //Metodo para listar entregador.
     public function index()
     {
         $entregador=Entregador::all();
@@ -29,7 +29,7 @@ class EntregadorController extends Controller
         return "cadastro bem sucedido!";
     }
 
-    //Metodo para detalhar entrgador
+    //Metodo para detalhar entrgador.
     public function show(string $id)
     {
         $entregador=Entregador::find($id);
@@ -44,7 +44,7 @@ class EntregadorController extends Controller
         //
     }
 
-    ////Metodo para atualizar entregador
+    ////Metodo para atualizar entregador.
     public function update(Request $request, string $id)
     {
         $entregador=Entregador::find($id);
@@ -57,7 +57,7 @@ class EntregadorController extends Controller
     }
 
 
-    ////metodo para eliminar entregador
+    ////metodo para eliminar entregador.
     public function destroy(string $id){
         $entregador=Entregador::find($id);
         $entregador->delete();

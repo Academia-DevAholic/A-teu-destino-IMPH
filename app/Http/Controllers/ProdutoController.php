@@ -7,7 +7,7 @@ use App\Models\Produto;
 
 class ProdutoController extends Controller
 {
-    //Metodo para listar produto
+    //Metodo para listar produto.
     public function index(){
         
         $produto=Produto::all();
@@ -33,7 +33,7 @@ class ProdutoController extends Controller
         return "cadastro bem sucedido!";
     }
 
-    //Metodo para detalhar produto
+    //Metodo para detalhar produto.
     public function show(string $id)
     {
         $produto=Produto::find($id);
@@ -48,7 +48,7 @@ class ProdutoController extends Controller
         //
     }
 
-    
+     //Metodo para atualizar produto.
     public function update(Request $request, string $id)
     {
         $produto=Produto::find($id);
@@ -60,7 +60,7 @@ class ProdutoController extends Controller
         
     }
 
-    
+    //metodo para eliminar produto.
     public function destroy(string $id){
         $produto=Produto::find($id);
         $produto->delete();

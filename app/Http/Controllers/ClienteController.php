@@ -8,7 +8,7 @@ use App\Models\Cliente;
 class ClienteController extends Controller
 {
     
-    //Metodo para listar cliente
+    //Metodo para listar cliente.
     public function index(){
     
         $cliente=Cliente::all();
@@ -28,7 +28,7 @@ class ClienteController extends Controller
     }
 
     
-    //Metodo para detalhar cliente
+    //Metodo para detalhar cliente.
     public function show(string $id)
     {
         $cliente=Cliente::find($id);
@@ -42,7 +42,7 @@ class ClienteController extends Controller
     }
 
  
-    //Metodo para atualizar cliente
+    //Metodo para atualizar cliente.
     public function update(Request $request, string $id) {
         
         $cliente=Cliente::find($id);
@@ -56,7 +56,7 @@ class ClienteController extends Controller
     }
 
 
-    //metodo para eliminar cliente
+    //metodo para eliminar cliente.
    public function destroy(string $id){
         $cliente=Cliente::find($id);
         $cliente->delete();
