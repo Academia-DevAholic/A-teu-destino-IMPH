@@ -24,21 +24,26 @@ class VeiculoController extends Controller
      // Metodo para cadastrar o veiculo(metodo_criar)
     public function store(Request $request)
     {
+        
         $veiculo=new Veiculo();
         $veiculo->id_tipo_veiculo=$request->id_tipo_veiculo;
-        $veiculo->id_tipo_entregador=$request->id_tipo_entregador;
+        $veiculo->id_entregador=$request->id_entregador;
         $veiculo->marca=$request->marca;
         $veiculo->modelo=$request->modelo;
-        $veiculo->ducumento=$request->documento;
+        $veiculo->documento=$request->documento;
         $veiculo->matricula=$request->matricula;
+        $veiculo->save();
+        return "veiculo salvo";
     }
 
     /**
      * Display the specified resource.
      */
+    // Metodo para detalhar o veiculo
     public function show(string $id)
     {
-        //
+        $veiculo= Veiculo::find($id);
+        return $veiculo;
     }
 
     /**
@@ -52,16 +57,28 @@ class VeiculoController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    // Metodo para atualizar o veiculo
     public function update(Request $request, string $id)
     {
-        //
+       $veiculo= Veiculo::find($id);
+       $veiculo->id_tipo_veiculo=$request->id_tipo_veiculo;
+       $veiculo->id_entregador=$request->id_entregador;
+       $veiculo->marca=$request->marca;
+       $veiculo->modelo=$request->modelo;
+       $veiculo->documento=$request->documento;
+       $veiculo->matricula=$request->matricula;
+       $veiculo->save();
+       return "veiculo atualizado";
     }
 
     /**
      * Remove the specified resource from storage.
      */
+    // Metodo para eliminar veiculo
     public function destroy(string $id)
     {
-        //
+        $veiculo= Veiculo::find($id);
+        $veiculo->delete();
+        return "veiculo eliminado";
     }
 }
