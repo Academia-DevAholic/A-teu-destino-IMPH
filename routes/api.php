@@ -21,3 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::get('listar_veiculo', [VeiculoController::class, 'index']);
 Route::post('cadastro_veiculo', [VeiculoController::class, 'store']);
+Route::get('/detalhar_veiculo/{id}', [VeiculoController::class, 'shwo']);
+Route::put('/atualizar_veiculo/{id}', [VeiculoController::class, 'update']);
+Route::get('/eliminar_veiculo/{id}', [VeiculoController::class, 'destroy']);

@@ -11,27 +11,22 @@ class ClienteController extends Controller
      * Display a listing of the resource.
      */
     //Metodo para listar cliente
-    public function index()
-    {
+    public function index(){
     
         $cliente=Cliente::all();
         return $cliente;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    //metodo para cadastro de cliente.
+    public function store(Request $request) {
+   
+        $cliente= new Cliente();
+        $cliente->name=$request->name;
+        $cliente->email=$request->email;
+        $cliente->password=$request->password;
+        $cliente->id_usuario=$request->id_usuario;
+        $cliente->save();
+        return "texte";
     }
 
     /**
