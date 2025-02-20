@@ -33,12 +33,11 @@ class ProdutoController extends Controller
         return "cadastro bem sucedido!";
     }
 
-    /**
-     * Display the specified resource.
-     */
+    //Metodo para detalhar produto
     public function show(string $id)
     {
-        //
+        $produto=Produto::find($id);
+        return $produto;
     }
 
     /**
@@ -49,19 +48,22 @@ class ProdutoController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(Request $request, string $id)
     {
-        //
+        $produto=Produto::find($id);
+        $produto->id_tipo_encomenda=$request->id_tipo_encomenda;
+        $produto->nome=$request->nome;
+        $produto->descricao=$request->descricao;
+        $produto->save();
+        return  ('Atualizado com sucesso!');
+        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+    
+    public function destroy(string $id){
+        $produto=Produto::find($id);
+        $produto->delete();
+        return ('Elimnado com sucesso!');
     }
 }
