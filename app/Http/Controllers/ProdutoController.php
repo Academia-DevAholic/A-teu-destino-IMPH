@@ -37,6 +37,11 @@ class ProdutoController extends Controller
     public function show(string $id)
     {
         $produto=Produto::find($id);
+        if (!$produto) {
+            // Produto não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['Produto não encontrado'], 404);
+        }
+    
         return $produto;
     }
 
@@ -62,8 +67,18 @@ class ProdutoController extends Controller
 
     //metodo para eliminar produto.
     public function destroy(string $id){
-        $produto=Produto::find($id);
-        $produto->delete();
-        return ('Elimnado com sucesso!');
+
+    $produto = Produto::find($id);
+
+    if (!$produto) {
+        // Produto não encontrado, retorna um erro 404
+        return response()->json([ 'Produto não encontrado'], 404);
+    }
+
+    // Produto encontrado, realiza a exclusão
+    $produto->delete();
+
+    // Retorna uma mensagem de sucesso
+    return response()->json([ 'Produto eliminado com sucesso!']);
     }
 }

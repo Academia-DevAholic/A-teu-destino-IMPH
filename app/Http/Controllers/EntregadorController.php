@@ -33,6 +33,11 @@ class EntregadorController extends Controller
     public function show(string $id)
     {
         $entregador=Entregador::find($id);
+        if (!$entregador) {
+            // entregador não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['entregador não encontrado'], 404);
+        }
+    
         return $entregador;
     }
 
@@ -59,8 +64,17 @@ class EntregadorController extends Controller
 
     ////metodo para eliminar entregador.
     public function destroy(string $id){
-        $entregador=Entregador::find($id);
+        $entregador = Entregador::find($id);
+
+        if (!$entregador) {
+            // entregador não encontrado, retorna um erro 404
+            return response()->json([ 'entregador não encontrado'], 404);
+        }
+    
+        // entregador encontrado, realiza a exclusão
         $entregador->delete();
-        return ('Elimnado com sucesso!');
+    
+        // Retorna uma mensagem de sucesso
+        return response()->json([ 'entregador eliminado com sucesso!']);
     }
 }

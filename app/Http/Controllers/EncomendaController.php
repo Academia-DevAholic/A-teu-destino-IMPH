@@ -44,7 +44,12 @@ class EncomendaController extends Controller
     //Metodo para detalhar encomenda.
     public function show(string $id)
     {
-        $encomenda=encomenda::find($id);
+        $encomenda=Encomenda::find($id);
+        if (!$encomenda) {
+            // encomenda não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['encomenda não encontrado'], 404);
+        }
+    
         return $encomenda;
     }
 
@@ -76,8 +81,17 @@ class EncomendaController extends Controller
     //metodo para eliminar encomenda.
     public function destroy(string $id)
     {
-        $encomenda=encomenda::find($id);
+        $encomenda = Encomenda::find($id);
+
+        if (!$encomenda) {
+            // encomenda não encontrado, retorna um erro 404
+            return response()->json([ 'encomenda não encontrada'], 404);
+        }
+    
+        // encomenda encontrado, realiza a exclusão
         $encomenda->delete();
-        return ('Elimnado com sucesso!');
+    
+        // Retorna uma mensagem de sucesso
+        return response()->json([ 'encomenda eliminada com sucesso!']);
     }
 }

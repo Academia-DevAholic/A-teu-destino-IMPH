@@ -32,6 +32,11 @@ class ClienteController extends Controller
     public function show(string $id)
     {
         $cliente=Cliente::find($id);
+        if (!$cliente) {
+            // cliente não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['cliente não encontrado'], 404);
+        }
+    
         return $cliente;
     }
 
@@ -58,9 +63,18 @@ class ClienteController extends Controller
 
     //metodo para eliminar cliente.
    public function destroy(string $id){
-        $cliente=Cliente::find($id);
-        $cliente->delete();
-        return ('Elimnado com sucesso!');
+    $cliente = Cliente::find($id);
+
+    if (!$cliente) {
+        // cliente não encontrado, retorna um erro 404
+        return response()->json([ 'cliente não encontrado'], 404);
+    }
+
+    // cliente encontrado, realiza a exclusão
+    $cliente->delete();
+
+    // Retorna uma mensagem de sucesso
+    return response()->json([ 'cliente eliminado com sucesso!']);
         
     }
 }
