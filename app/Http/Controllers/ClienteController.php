@@ -26,7 +26,7 @@ class ClienteController extends Controller
         $cliente->password=$request->password;
         $cliente->id_usuario=$request->id_usuario;
         $cliente->save();
-        return "texte";
+        return "cadastro bem sucedido!";
     }
 
     /**
@@ -34,30 +34,36 @@ class ClienteController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $cliente=Cliente::find($id);
+        return $cliente;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+ 
+    //Metodo para atualizar cliente
+    public function update(Request $request, string $id) {
+        
+        $cliente=Cliente::find($id);
+        $cliente->name=$request->name;
+        $cliente->email=$request->email;
+        $cliente->password=$request->password;
+        $cliente->id_usuario=$request->id_usuario;
+        $cliente->save();
+        return  ('Atualizado com sucesso!');
+        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+
+    //metodo para eliminar cliente
+   public function destroy(string $id){
+        $cliente=Cliente::find($id);
+        $cliente->delete();
+        return ('Elimnado com sucesso!');
+        
     }
 }
