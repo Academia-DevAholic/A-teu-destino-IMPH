@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Produto;
 
-class ProdutosController extends Controller
+class ProdutoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    //Metodo para listar produto
+    public function index(){
+        
+        $produto=Produto::all();
+        return $produto;
     }
 
     /**
@@ -22,12 +22,15 @@ class ProdutosController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    //metodo para cadastro de produto.
+    public function store(Request $request){
+
+        $produto= new Produto();
+        $produto->id_tipo_encomenda=$request->id_tipo_encomenda;
+        $produto->nome=$request->nome;
+        $produto->descricao=$request->descricao;
+        $produto->save();
+        return "cadastro bem sucedido!";
     }
 
     /**

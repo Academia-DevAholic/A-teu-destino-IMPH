@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->integer('id_tipo_encomenda'); 
             $table->string('nome');
-             $table->string('tamanho');
              $table->text('descricao'); 
             
             $table->timestamps();

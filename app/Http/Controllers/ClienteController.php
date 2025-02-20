@@ -7,9 +7,7 @@ use App\Models\Cliente;
 
 class ClienteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     //Metodo para listar cliente
     public function index(){
     
@@ -29,9 +27,8 @@ class ClienteController extends Controller
         return "cadastro bem sucedido!";
     }
 
-    /**
-     * Display the specified resource.
-     */
+    
+    //Metodo para detalhar cliente
     public function show(string $id)
     {
         $cliente=Cliente::find($id);

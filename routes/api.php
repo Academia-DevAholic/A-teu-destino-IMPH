@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EncomendaController;
 use App\Http\Controllers\EntregadorController;
+use App\Http\Controllers\ProdutoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,4 +44,12 @@ Route::delete('/eliminar_encomenda/{id}', [EncomendaController::class, 'destroy'
 //===========CRUD do entregador===========//
 
 Route::get('/listar_entregador',[EntregadorController::class, 'index']);
+Route::post('/cadastrar_entregador',[EntregadorController::class, 'store']);
+Route::get('/detalhar_entregador/{id}',[EntregadorController::class, 'show']);
+Route::put('/atualizar_entregador/{id}',[EntregadorController::class, 'update']);
+Route::delete('/eliminar_entregador/{id}',[EntregadorController::class, 'destroy']);
 
+
+//===========CRUD do produto===========//
+Route::get('/listar_produto', [ProdutoController::class, 'index']);
+Route::post('/cadastrar_produto', [ProdutoController::class, 'store']);

@@ -8,37 +8,32 @@ use App\Models\Entregador;
 
 class EntregadorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+     //Metodo para listar entregador
     public function index()
     {
         $entregador=Entregador::all();
         return $entregador;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    
 
-    /**
-     * Store a newly created resource in storage.
-     */
+     //metodo para cadastro de entregador.
     public function store(Request $request)
     {
-        //
+        $entregador= new Entregador();
+        $entregador->name=$request->name;
+        $entregador->email=$request->email;
+        $entregador->password=$request->password;
+        $entregador->id_usuario=$request->id_usuario;
+        $entregador->save();
+        return "cadastro bem sucedido!";
     }
 
-    /**
-     * Display the specified resource.
-     */
+    //Metodo para detalhar entrgador
     public function show(string $id)
     {
-        //
+        $entregador=Entregador::find($id);
+        return $entregador;
     }
 
     /**
@@ -49,19 +44,23 @@ class EntregadorController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    ////Metodo para atualizar entregador
     public function update(Request $request, string $id)
     {
-        //
+        $entregador=Entregador::find($id);
+        $entregador->name=$request->name;
+        $entregador->email=$request->email;
+        $entregador->password=$request->password;
+        $entregador->id_usuario=$request->id_usuario;
+        $entregador->save();
+        return "edicao bem sucedida!";
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+
+    ////metodo para eliminar entregador
+    public function destroy(string $id){
+        $entregador=Entregador::find($id);
+        $entregador->delete();
+        return ('Elimnado com sucesso!');
     }
 }
