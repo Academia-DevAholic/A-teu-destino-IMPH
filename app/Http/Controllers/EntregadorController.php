@@ -53,12 +53,16 @@ class EntregadorController extends Controller
     public function update(Request $request, string $id)
     {
         $entregador=Entregador::find($id);
+        if (!$entregador) {
+            // entregador não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['entregador não encontrado'], 404);
+        }
         $entregador->name=$request->name;
         $entregador->email=$request->email;
         $entregador->password=$request->password;
         $entregador->id_usuario=$request->id_usuario;
         $entregador->save();
-        return "edicao bem sucedida!";
+        return respose()->json(["edicao bem sucedida!"]);
     }
 
 

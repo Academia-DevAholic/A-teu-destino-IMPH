@@ -51,12 +51,16 @@ class ClienteController extends Controller
     public function update(Request $request, string $id) {
         
         $cliente=Cliente::find($id);
+        if (!$cliente) {
+            // cliente não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['cliente não encontrado'], 404);
+        }
         $cliente->name=$request->name;
         $cliente->email=$request->email;
         $cliente->password=$request->password;
         $cliente->id_usuario=$request->id_usuario;
         $cliente->save();
-        return  ('Atualizado com sucesso!');
+        return response->json (['Atualizado com sucesso!']);
         
     }
 
@@ -67,7 +71,7 @@ class ClienteController extends Controller
 
     if (!$cliente) {
         // cliente não encontrado, retorna um erro 404
-        return response()->json([ 'cliente não encontrado'], 404);
+   return response()->json([ 'cliente não encontrado'], 404);
     }
 
     // cliente encontrado, realiza a exclusão

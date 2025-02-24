@@ -57,11 +57,15 @@ class ProdutoController extends Controller
     public function update(Request $request, string $id)
     {
         $produto=Produto::find($id);
+        if (!$produto) {
+            // Produto não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['Produto não encontrado'], 404);
+        }
         $produto->id_tipo_encomenda=$request->id_tipo_encomenda;
         $produto->nome=$request->nome;
         $produto->descricao=$request->descricao;
         $produto->save();
-        return  ('Atualizado com sucesso!');
+        return response()->json (['Atualizado com sucesso!']);
         
     }
 

@@ -65,6 +65,10 @@ class EncomendaController extends Controller
     public function update(Request $request, string $id)
     {
         $encomenda=encomenda::find($id);
+        if (!$encomenda) {
+            // encomenda não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['encomenda não encontrado'], 404);
+        }
         $encomenda->id_produto=$request->id_produto;
         $encomenda->id_cliente=$request->id_cliente;
         $encomenda->id_entregador=$request->id_entregador;
@@ -75,7 +79,7 @@ class EncomendaController extends Controller
         $encomenda->ponto_chegada=$request->ponto_chegada;
         $encomenda->tempo=$request->tempo;
         $encomenda->save();
-        return "atualizado com sucesso!";
+        return response()->json(["atualizado com sucesso!"]);
     }
 
     //metodo para eliminar encomenda.
