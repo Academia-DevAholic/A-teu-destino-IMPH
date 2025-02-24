@@ -2,15 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-<<<<<<< HEAD
 use App\Http\Controllers\VeiculoController;
 use App\Http\Controllers\ConversasController;
-=======
-use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\EncomendaController;
-use App\Http\Controllers\EntregadorController;
-use App\Http\Controllers\ProdutoController;
->>>>>>> 13afaa7dfe0c593d485a5b457c436dfd5a043e8d
+use App\Http\Controllers\Tipo_de_encomendaController;
+use App\Http\Controllers\Tipo_de_veiculoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,37 +37,17 @@ Route::get('/detalhar_conversas/{id}', [ConversasController::class, 'show']);
 Route::put('/atualizar_conversas/{id}', [ConversasController::class, 'update']);
 Route::get('/eliminar_conversas/{id}', [ConversasController::class, 'destroy']);
 
-
-<<<<<<< HEAD
-=======
-//===========CRUD de Cliente===========//
-Route::get('/listar_cliente', [ClienteController::class, 'index']);
-Route::post('/cadastro_cliente', [ClienteController::class, 'store']);
-Route::get('/detalhar_cliente/{id}', [ClienteController::class, 'show']);
-Route::put('/atualizar_cliente/{id}', [ClienteController::class, 'update']);
-Route::delete('/eliminar_cliente/{id}', [ClienteController::class, 'destroy']);
+//=======================CRUDE DO TIPO_DE_ENCOMENDA===================//
+Route::get('listar_tipo_de_encomenda', [Tipo_de_encomendaController::class, 'index']);
+Route::get('cadastro_tipo_de_encomenda', [Tipo_de_encomendaController::class, 'store']);
+Route::get('detalhar_tipo_de_encomenda/{id}', [Tipo_de_encomendaController::class, 'show']);
+Route::get('atualizar_tipo_de_encomenda/{id}', [Tipo_de_encomendaController::class, 'update']);
+Route::get('eliminar_tipo_de_encomenda/{id}', [Tipo_de_encomendaController::class, 'destroy']);
 
 
-
-//===========CRUD de encomenda===========//
-
-Route::get('/listar_encomenda', [EncomendaController::class, 'index']);
-Route::post('/cadastrar_encomenda', [EncomendaController::class, 'store']);
-Route::get('/detalhar_encomenda/{id}', [EncomendaController::class, 'show']);
-Route::put('/atualizar_encomenda/{id}', [EncomendaController::class, 'update']);
-Route::delete('/eliminar_encomenda/{id}', [EncomendaController::class, 'destroy']);
-
-
-//===========CRUD do entregador===========//
-
-Route::get('/listar_entregador',[EntregadorController::class, 'index']);
-Route::post('/cadastrar_entregador',[EntregadorController::class, 'store']);
-Route::get('/detalhar_entregador/{id}',[EntregadorController::class, 'show']);
-Route::put('/atualizar_entregador/{id}',[EntregadorController::class, 'update']);
-Route::delete('/eliminar_entregador/{id}',[EntregadorController::class, 'destroy']);
-
-
-//===========CRUD do produto===========//
-Route::get('/listar_produto', [ProdutoController::class, 'index']);
-Route::post('/cadastrar_produto', [ProdutoController::class, 'store']);
->>>>>>> 13afaa7dfe0c593d485a5b457c436dfd5a043e8d
+//================CRUD TIPO_DE_VEICULO============//
+Route::get('listar_tipo_de_veiculo', [Tipo_de_veiculoController::class, 'index']);
+Route::get('cadastro_tipo_de_veiculo', [Tipo_de_veiculoController::class, 'store']);
+Route::get('detalhar_tipo_de_veiculo', [Tipo_de_veiculoController::class, 'show']);
+Route::get('atualizar_tipo_de_veiculo', [Tipo_de_veiculoController::class, 'update']);
+Route::get('eliminar_tipo_de_veiculo', [Tipo_de_veiculoController::class, 'destroy']);
