@@ -7,7 +7,7 @@ use App\Models\Produto;
 
 class ProdutoController extends Controller
 {
-    //Metodo para listar produto
+    //Metodo para listar produto.
     public function index(){
         
         $produto=Produto::all();
@@ -33,12 +33,16 @@ class ProdutoController extends Controller
         return "cadastro bem sucedido!";
     }
 
-    /**
-     * Display the specified resource.
-     */
+    //Metodo para detalhar produto.
     public function show(string $id)
     {
-        //
+        $produto=Produto::find($id);
+        if (!$produto) {
+            // Produto não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['Produto não encontrado'], 404);
+        }
+    
+        return $produto;
     }
 
     /**
@@ -49,19 +53,36 @@ class ProdutoController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+     //Metodo para atualizar produto.
     public function update(Request $request, string $id)
     {
-        //
+        $produto=Produto::find($id);
+        if (!$produto) {
+            // Produto não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['Produto não encontrado'], 404);
+        }
+        $produto->id_tipo_encomenda=$request->id_tipo_encomenda;
+        $produto->nome=$request->nome;
+        $produto->descricao=$request->descricao;
+        $produto->save();
+        return response()->json (['Atualizado com sucesso!']);
+        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+    //metodo para eliminar produto.
+    public function destroy(string $id){
+
+    $produto = Produto::find($id);
+
+    if (!$produto) {
+        // Produto não encontrado, retorna um erro 404
+        return response()->json([ 'Produto não encontrado'], 404);
+    }
+
+    // Produto encontrado, realiza a exclusão
+    $produto->delete();
+
+    // Retorna uma mensagem de sucesso
+    return response()->json([ 'Produto eliminado com sucesso!']);
     }
 }

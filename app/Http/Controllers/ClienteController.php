@@ -8,7 +8,7 @@ use App\Models\Cliente;
 class ClienteController extends Controller
 {
     
-    //Metodo para listar cliente
+    //Metodo para listar cliente.
     public function index(){
     
         $cliente=Cliente::all();
@@ -28,10 +28,15 @@ class ClienteController extends Controller
     }
 
     
-    //Metodo para detalhar cliente
+    //Metodo para detalhar cliente.
     public function show(string $id)
     {
         $cliente=Cliente::find($id);
+        if (!$cliente) {
+            // cliente não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['cliente não encontrado'], 404);
+        }
+    
         return $cliente;
     }
 
@@ -42,25 +47,38 @@ class ClienteController extends Controller
     }
 
  
-    //Metodo para atualizar cliente
+    //Metodo para atualizar cliente.
     public function update(Request $request, string $id) {
         
         $cliente=Cliente::find($id);
+        if (!$cliente) {
+            // cliente não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['cliente não encontrado'], 404);
+        }
         $cliente->name=$request->name;
         $cliente->email=$request->email;
         $cliente->password=$request->password;
         $cliente->id_usuario=$request->id_usuario;
         $cliente->save();
-        return  ('Atualizado com sucesso!');
+        return response->json (['Atualizado com sucesso!']);
         
     }
 
 
-    //metodo para eliminar cliente
+    //metodo para eliminar cliente.
    public function destroy(string $id){
-        $cliente=Cliente::find($id);
-        $cliente->delete();
-        return ('Elimnado com sucesso!');
+    $cliente = Cliente::find($id);
+
+    if (!$cliente) {
+        // cliente não encontrado, retorna um erro 404
+   return response()->json([ 'cliente não encontrado'], 404);
+    }
+
+    // cliente encontrado, realiza a exclusão
+    $cliente->delete();
+
+    // Retorna uma mensagem de sucesso
+    return response()->json([ 'cliente eliminado com sucesso!']);
         
     }
 }

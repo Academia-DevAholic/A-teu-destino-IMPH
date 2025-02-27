@@ -8,7 +8,7 @@ use App\Models\Entregador;
 
 class EntregadorController extends Controller
 {
-     //Metodo para listar entregador
+     //Metodo para listar entregador.
     public function index()
     {
         $entregador=Entregador::all();
@@ -29,10 +29,15 @@ class EntregadorController extends Controller
         return "cadastro bem sucedido!";
     }
 
-    //Metodo para detalhar entrgador
+    //Metodo para detalhar entrgador.
     public function show(string $id)
     {
         $entregador=Entregador::find($id);
+        if (!$entregador) {
+            // entregador não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['entregador não encontrado'], 404);
+        }
+    
         return $entregador;
     }
 
@@ -44,23 +49,36 @@ class EntregadorController extends Controller
         //
     }
 
-    ////Metodo para atualizar entregador
+    ////Metodo para atualizar entregador.
     public function update(Request $request, string $id)
     {
         $entregador=Entregador::find($id);
+        if (!$entregador) {
+            // entregador não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['entregador não encontrado'], 404);
+        }
         $entregador->name=$request->name;
         $entregador->email=$request->email;
         $entregador->password=$request->password;
         $entregador->id_usuario=$request->id_usuario;
         $entregador->save();
-        return "edicao bem sucedida!";
+        return respose()->json(["edicao bem sucedida!"]);
     }
 
 
-    ////metodo para eliminar entregador
+    ////metodo para eliminar entregador.
     public function destroy(string $id){
-        $entregador=Entregador::find($id);
+        $entregador = Entregador::find($id);
+
+        if (!$entregador) {
+            // entregador não encontrado, retorna um erro 404
+            return response()->json([ 'entregador não encontrado'], 404);
+        }
+    
+        // entregador encontrado, realiza a exclusão
         $entregador->delete();
-        return ('Elimnado com sucesso!');
+    
+        // Retorna uma mensagem de sucesso
+        return response()->json([ 'entregador eliminado com sucesso!']);
     }
 }

@@ -29,6 +29,13 @@ Route::get('/detalhar_veiculo/{id}', [VeiculoController::class, 'show']);
 Route::put('/atualizar_veiculo/{id}', [VeiculoController::class, 'update']);
 Route::get('/eliminar_veiculo/{id}', [VeiculoController::class, 'destroy']);
 
+                //===========CRUD de Cliente===========//
+Route::get('/listar_cliente', [ClienteController::class, 'index']);
+Route::post('/cadastro_cliente', [ClienteController::class, 'store']);
+Route::get('/detalhar_cliente/{id}', [ClienteController::class, 'show']);
+Route::put('/atualizar_cliente/{id}', [ClienteController::class, 'update']);
+Route::delete('/eliminar_cliente/{id}', [ClienteController::class, 'destroy']);
+
 
 //==============CRUD DE CONVERSAS=======//
 Route::get('listar_conversas', [ConversasController::class, 'index']);
@@ -52,7 +59,29 @@ Route::get('detalhar_tipo_de_veiculo/{id}', [TipoVeiculosController::class, 'sho
 Route::put('atualizar_tipo_de_veiculo/{id}', [TipoVeiculosController::class, 'update']);
 Route::get('eliminar_tipo_de_veiculo/{id}', [TipoVeiculosController::class, 'destroy']);
 
-//===================CRUD FTP=====================//
+//===================CRUD autenticaçao=====================//
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
+                //===========CRUD de encomenda===========//
+Route::get('/listar_encomenda', [EncomendaController::class, 'index']);
+Route::post('/cadastrar_encomenda', [EncomendaController::class, 'store']);
+Route::get('/detalhar_encomenda/{id}', [EncomendaController::class, 'show']);
+Route::put('/atualizar_encomenda/{id}', [EncomendaController::class, 'update']);
+Route::delete('/eliminar_encomenda/{id}', [EncomendaController::class, 'destroy']);
+
+
+                //===========CRUD do entregador===========//
+Route::get('/listar_entregador',[EntregadorController::class, 'index']);
+Route::post('/cadastrar_entregador',[EntregadorController::class, 'store']);
+Route::get('/detalhar_entregador/{id}',[EntregadorController::class, 'show']);
+Route::put('/atualizar_entregador/{id}',[EntregadorController::class, 'update']);
+Route::delete('/eliminar_entregador/{id}',[EntregadorController::class, 'destroy']);
+
+
+                //===========CRUD do produto===========//
+Route::get('/listar_produto', [ProdutoController::class, 'index']);
+Route::post('/cadastrar_produto', [ProdutoController::class, 'store']);
+Route::get('/detalhar_produto/{id}', [ProdutoController::class, 'show']);
+Route::put('/atualizar_produto/{id}', [ProdutoController::class, 'update']);
+Route::delete('/eliminar_produto/{id}', [ProdutoController::class, 'destroy']);

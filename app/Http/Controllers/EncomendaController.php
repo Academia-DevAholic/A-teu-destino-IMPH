@@ -7,9 +7,7 @@ use App\Models\Encomenda;
 
 class EncomendaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    //Metodo para listar encomenda.
     public function index(){
         
         $encomenda=Encomenda::all();
@@ -25,9 +23,7 @@ class EncomendaController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    //metodo para cadastro de encomenda.
     public function store(Request $request){
     
         $encomenda= new Encomenda();
@@ -44,12 +40,16 @@ class EncomendaController extends Controller
         return "cadastro bem sucedido!";
     }
 
-    /**
-     * Display the specified resource.
-     */
+    
+    //Metodo para detalhar encomenda.
     public function show(string $id)
     {
-        $encomenda=encomenda::find($id);
+        $encomenda=Encomenda::find($id);
+        if (!$encomenda) {
+            // encomenda não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['encomenda não encontrado'], 404);
+        }
+    
         return $encomenda;
     }
 
@@ -61,12 +61,14 @@ class EncomendaController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    //Metodo para atualizar encomenda.
     public function update(Request $request, string $id)
     {
         $encomenda=encomenda::find($id);
+        if (!$encomenda) {
+            // encomenda não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
+            return response()->json(['encomenda não encontrado'], 404);
+        }
         $encomenda->id_produto=$request->id_produto;
         $encomenda->id_cliente=$request->id_cliente;
         $encomenda->id_entregador=$request->id_entregador;
@@ -77,16 +79,23 @@ class EncomendaController extends Controller
         $encomenda->ponto_chegada=$request->ponto_chegada;
         $encomenda->tempo=$request->tempo;
         $encomenda->save();
-        return "atualizado com sucesso!";
+        return response()->json(["atualizado com sucesso!"]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    //metodo para eliminar encomenda.
     public function destroy(string $id)
     {
-        $encomenda=encomenda::find($id);
+        $encomenda = Encomenda::find($id);
+
+        if (!$encomenda) {
+            // encomenda não encontrado, retorna um erro 404
+            return response()->json([ 'encomenda não encontrada'], 404);
+        }
+    
+        // encomenda encontrado, realiza a exclusão
         $encomenda->delete();
-        return ('Elimnado com sucesso!');
+    
+        // Retorna uma mensagem de sucesso
+        return response()->json([ 'encomenda eliminada com sucesso!']);
     }
 }
