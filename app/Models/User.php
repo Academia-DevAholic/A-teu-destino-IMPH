@@ -42,4 +42,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+      // Definindo o relacionamento com o Cliente
+    public function cliente()
+    {
+        // Relacionamento lógico com a tabela Cliente
+        return $this->hasOne(Cliente::class, 'user_id', 'id');
+    }
 }

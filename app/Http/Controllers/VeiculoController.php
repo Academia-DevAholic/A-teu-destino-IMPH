@@ -22,21 +22,30 @@ class VeiculoController extends Controller
      * Store a newly created resource in storage.
      */
      // Metodo para cadastrar o veiculo(metodo_criar)
-    public function store(Request $request)
-    {
-        
-        $veiculo=new Veiculo();
-       
-        $veiculo->id_tipo_veiculo=$request->id_tipo_veiculo;
-        $veiculo->id_entregador=$request->id_entregador;
-        $veiculo->marca=$request->marca;
-        $veiculo->modelo=$request->modelo;
-        $veiculo->documento=$request->documento;
-        $veiculo->matricula=$request->matricula;
-        $veiculo->save();
-        return('veiculo salvo');
-    }
-
+     public function store(Request $request)
+     {
+         // Validação para garantir que o id_tipo_veiculo existe na tabela tipo_veiculo
+         $request->validate([
+             'id_tipo_veiculo' => 'required|exists:tipo_veiculos,id',
+             'id_entregador' => 'required',
+             'marca' => 'required',
+             'modelo' => 'required',
+             'documento' => 'required',
+             'matricula' => 'required',
+         ]);
+     
+         // Criação do novo veículo
+         $veiculo = new Veiculo();
+         $veiculo->id_tipo_veiculo = $request->id_tipo_veiculo;
+         $veiculo->id_entregador = $request->id_entregador;
+         $veiculo->marca = $request->marca;
+         $veiculo->modelo = $request->modelo;
+         $veiculo->documento = $request->documento;
+         $veiculo->matricula = $request->matricula;
+         $veiculo->save();
+     
+         return 'Veículo salvo';
+     }
     /**
      * Display the specified resource.
      */
