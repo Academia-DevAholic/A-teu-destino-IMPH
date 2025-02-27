@@ -26,6 +26,7 @@ class VeiculoController extends Controller
     {
         
         $veiculo=new Veiculo();
+       
         $veiculo->id_tipo_veiculo=$request->id_tipo_veiculo;
         $veiculo->id_entregador=$request->id_entregador;
         $veiculo->marca=$request->marca;
@@ -33,7 +34,7 @@ class VeiculoController extends Controller
         $veiculo->documento=$request->documento;
         $veiculo->matricula=$request->matricula;
         $veiculo->save();
-        return "veiculo salvo";
+        return('veiculo salvo');
     }
 
     /**
@@ -43,6 +44,10 @@ class VeiculoController extends Controller
     public function show(string $id)
     {
         $veiculo= Veiculo::find($id);
+        if(!$veiculo){
+            // veiculo não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404//
+            return response()->json(['tipo_de_veiculo não encontrado'], 404);
+        }
         return $veiculo;
     }
 
@@ -61,6 +66,11 @@ class VeiculoController extends Controller
     public function update(Request $request, string $id)
     {
        $veiculo= Veiculo::find($id);
+       
+       if(!$veiculo){
+           // veiculo não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404//
+           return response()->json(['veiculo não encontrado'], 404);
+       }
        $veiculo->id_tipo_veiculo=$request->id_tipo_veiculo;
        $veiculo->id_entregador=$request->id_entregador;
        $veiculo->marca=$request->marca;
@@ -68,7 +78,7 @@ class VeiculoController extends Controller
        $veiculo->documento=$request->documento;
        $veiculo->matricula=$request->matricula;
        $veiculo->save();
-       return "veiculo atualizado";
+       return response()->json(['veiculo atuaizado']);
     }
 
     /**
@@ -78,7 +88,11 @@ class VeiculoController extends Controller
     public function destroy(string $id)
     {
         $veiculo= Veiculo::find($id);
+        if(!$veiculo){
+            // veiculo não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404//
+            return response()->json(['veiculo não encontrado'], 404);
+        }
         $veiculo->delete();
-        return "veiculo eliminado";
+        return response()->json(['veiculo eliminado']);
     }
 }

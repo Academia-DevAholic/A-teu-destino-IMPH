@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Tipo-de-veiculo extends Model
+class TipoVeiculo extends Model
 {
     use HasFactory;
 }

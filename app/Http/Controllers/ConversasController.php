@@ -43,6 +43,10 @@ class ConversasController extends Controller
     public function show(string $id)
     {
         $conversa= Conversa::find($id);
+        if(!$conversa){
+            // veiculo não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404//
+            return response()->json(['conversa não encontrado'], 404);
+        }
         return $conversa;
     }
 
@@ -60,12 +64,17 @@ class ConversasController extends Controller
     public function update(Request $request, string $id)
     {
         $conversa= Conversa::find($id);
+        if(!$conversa){
+            // veiculo não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404//
+            return response()->json([' não encontrado'], 404);
+        }
         $conversa->id_entregador=$request->id_entregador;
         $conversa->id_cliente=$request->id_cliente;
         $conversa->mensagens=$request->mensagens;
         $conversa->status=$request->status;
         $conversa->save();
-        return "conversas atualizadas";
+        return response()->json(['conversas atualizadas']);
+        
     }
 
     /**
@@ -74,7 +83,11 @@ class ConversasController extends Controller
     public function destroy(string $id)
     {
         $conversa= Conversa::find($id);
+        if(!$conversa){
+            // veiculo não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404//
+            return responsa()->json(['conversa não encontrado'], 404);
+        }
         $conversa->delete();
-        return "conversas eliminadas";
+        return response()->json(['conversas eliminadas']);
     }
 }

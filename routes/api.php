@@ -4,8 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VeiculoController;
 use App\Http\Controllers\ConversasController;
-use App\Http\Controllers\Tipo_de_encomendaController;
-use App\Http\Controllers\Tipo_de_veiculoController;
+use App\Http\Controllers\TipoEncomendaController;
+use App\Http\Controllers\TipoVeiculosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,16 +38,21 @@ Route::put('/atualizar_conversas/{id}', [ConversasController::class, 'update']);
 Route::get('/eliminar_conversas/{id}', [ConversasController::class, 'destroy']);
 
 //=======================CRUDE DO TIPO_DE_ENCOMENDA===================//
-Route::get('listar_tipo_de_encomenda', [Tipo_de_encomendaController::class, 'index']);
-Route::get('cadastro_tipo_de_encomenda', [Tipo_de_encomendaController::class, 'store']);
-Route::get('detalhar_tipo_de_encomenda/{id}', [Tipo_de_encomendaController::class, 'show']);
-Route::get('atualizar_tipo_de_encomenda/{id}', [Tipo_de_encomendaController::class, 'update']);
-Route::get('eliminar_tipo_de_encomenda/{id}', [Tipo_de_encomendaController::class, 'destroy']);
+Route::get('listar_tipo_de_encomenda', [TipoEncomendaController::class, 'index']);
+Route::post('cadastro_tipo_de_encomenda', [TipoEncomendaController::class, 'store']);
+Route::get('detalhar_tipo_de_encomenda/{id}', [TipoEncomendaController::class, 'show']);
+Route::put('atualizar_tipo_de_encomenda/{id}', [TipoEncomendaController::class, 'update']);
+Route::get('eliminar_tipo_de_encomenda/{id}', [TipoEncomendaController::class, 'destroy']);
 
 
 //================CRUD TIPO_DE_VEICULO============//
-Route::get('listar_tipo_de_veiculo', [Tipo_de_veiculoController::class, 'index']);
-Route::get('cadastro_tipo_de_veiculo', [Tipo_de_veiculoController::class, 'store']);
-Route::get('detalhar_tipo_de_veiculo', [Tipo_de_veiculoController::class, 'show']);
-Route::get('atualizar_tipo_de_veiculo', [Tipo_de_veiculoController::class, 'update']);
-Route::get('eliminar_tipo_de_veiculo', [Tipo_de_veiculoController::class, 'destroy']);
+Route::get('listar_tipo_de_veiculo', [TipoVeiculosController::class, 'index']);
+Route::post('cadastro_tipo_de_veiculo', [TipoVeiculosController::class, 'store']);
+Route::get('detalhar_tipo_de_veiculo/{id}', [TipoVeiculosController::class, 'show']);
+Route::put('atualizar_tipo_de_veiculo/{id}', [TipoVeiculosController::class, 'update']);
+Route::get('eliminar_tipo_de_veiculo/{id}', [TipoVeiculosController::class, 'destroy']);
+
+//===================CRUD FTP=====================//
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
