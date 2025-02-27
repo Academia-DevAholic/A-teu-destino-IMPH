@@ -50,5 +50,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cliente::class);
     }
+
+      // Definir o relacionamento inverso, se o usuário "pertence" ao entregador
+    public function entregador()
+    {
+        return $this->hasMany(Entregador::class);
+    }
 }
 
