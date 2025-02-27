@@ -8,10 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Cliente extends Model
 {
     use HasFactory;
-    // Definindo o relacionamento com o User
+
+    protected $fillable = [
+        'name', 
+        'email', 
+        'password', 
+        'perfil', // Adicionado o campo 'perfil' no fillable
+        'id_usuario', // Adicionado o campo 'perfil' no fillable
+    ];
+
+    // Relacionamento com o modelo User
     public function user()
     {
-        // Relacionamento lógico com a tabela User
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class);
     }
 }
+

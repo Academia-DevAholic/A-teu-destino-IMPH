@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Produto;
 
 class ProdutoController extends Controller
 {
-    //Metodo para listar produto.
-    public function index(){
+     //Metodo para listar produto.
+     public function index(){
         
         $produto=Produto::all();
         return $produto;

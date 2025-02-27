@@ -2,6 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\ClienteController;
+use App\Http\Controllers\API\EncomendaController;
+use App\Http\Controllers\API\EntregadorController;
+use App\Http\Controllers\API\ProdutoController;
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\VeiculoController;
 use App\Http\Controllers\ConversasController;
 use App\Http\Controllers\TipoEncomendaController;
@@ -59,10 +64,8 @@ Route::get('detalhar_tipo_de_veiculo/{id}', [TipoVeiculosController::class, 'sho
 Route::put('atualizar_tipo_de_veiculo/{id}', [TipoVeiculosController::class, 'update']);
 Route::get('eliminar_tipo_de_veiculo/{id}', [TipoVeiculosController::class, 'destroy']);
 
-//===================CRUD autenticaçao=====================//
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
+
+
                 //===========CRUD de encomenda===========//
 Route::get('/listar_encomenda', [EncomendaController::class, 'index']);
 Route::post('/cadastrar_encomenda', [EncomendaController::class, 'store']);
@@ -85,3 +88,8 @@ Route::post('/cadastrar_produto', [ProdutoController::class, 'store']);
 Route::get('/detalhar_produto/{id}', [ProdutoController::class, 'show']);
 Route::put('/atualizar_produto/{id}', [ProdutoController::class, 'update']);
 Route::delete('/eliminar_produto/{id}', [ProdutoController::class, 'destroy']);
+
+                //===========CRUD do Auth===========//
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);  

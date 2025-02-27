@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Encomenda;
 
 class EncomendaController extends Controller
 {
+    
     //Metodo para listar encomenda.
     public function index(){
         
@@ -97,5 +99,5 @@ class EncomendaController extends Controller
     
         // Retorna uma mensagem de sucesso
         return response()->json([ 'encomenda eliminada com sucesso!']);
-    }
+    }	
 }
