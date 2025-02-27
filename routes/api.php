@@ -2,10 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\EncomendaController;
-use App\Http\Controllers\EntregadorController;
-use App\Http\Controllers\ProdutoController;
+use App\Http\Controllers\API\ClienteController;
+use App\Http\Controllers\API\EncomendaController;
+use App\Http\Controllers\API\EntregadorController;
+use App\Http\Controllers\API\ProdutoController;
+use App\Http\Controllers\API\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,3 +55,8 @@ Route::post('/cadastrar_produto', [ProdutoController::class, 'store']);
 Route::get('/detalhar_produto/{id}', [ProdutoController::class, 'show']);
 Route::put('/atualizar_produto/{id}', [ProdutoController::class, 'update']);
 Route::delete('/eliminar_produto/{id}', [ProdutoController::class, 'destroy']);
+
+                //===========CRUD do Auth===========//
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);  

@@ -18,10 +18,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 
-        'email', 
-        'password', 
-        'perfil', // Adicionado o campo 'perfil' no fillable
+        'name',
+        'email',
+        'password',
     ];
 
     /**
@@ -43,12 +42,4 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    
-    // Definir o relacionamento inverso, se o usuário "pertence" ao cliente
-    public function clientes()
-    {
-        return $this->hasMany(Cliente::class);
-    }
 }
-
