@@ -89,6 +89,7 @@ Route::get('/detalhar_produto/{id}', [ProdutoController::class, 'show']);
 Route::put('/atualizar_produto/{id}', [ProdutoController::class, 'update']);
 Route::delete('/eliminar_produto/{id}', [ProdutoController::class, 'destroy']);
 
+
                 //===========CRUD do Auth===========//
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
