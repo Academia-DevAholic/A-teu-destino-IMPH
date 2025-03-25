@@ -59,7 +59,7 @@ class EntregadorController extends Controller
  
              return response()->json([
                  'message' => 'Cadastro de entregador e Usuário bem-sucedido!',
-                 'cliente' => $entregador, // Retornando o entregador criado
+                 'entregador' => $entregador, // Retornando o entregador criado
                  'user' => $user, // Retornando o Usuário criado
              ], 201);
  

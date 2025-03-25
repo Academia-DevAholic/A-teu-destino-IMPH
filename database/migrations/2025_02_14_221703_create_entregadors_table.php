@@ -14,13 +14,16 @@ return new class extends Migration
         Schema::create('entregadors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer('numero_de_telefone');
             $table->string('email')->unique();
             $table->string('password');
             $table->string('perfil')->default('entregador');
             $table->integer('id_usuario'); 
-            $table->string('carta_de_conducao'); 
-            $table->string('anexo_bi');
-             $table->string('fotografia');
+            $table->integer('status'); 
+            $table->text('carta_de_conducao'); 
+            $table->text('anexo_bi');
+            $table->text('fotografia');
+            $table->string('tempo_de_partida');
             
             $table->timestamps();
         });
