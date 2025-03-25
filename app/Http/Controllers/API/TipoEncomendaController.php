@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\TipoEncomenda;
+use Illuminate\Http\Request;
+
 class TipoEncomendaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         

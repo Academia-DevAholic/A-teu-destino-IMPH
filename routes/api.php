@@ -7,10 +7,12 @@ use App\Http\Controllers\API\EncomendaController;
 use App\Http\Controllers\API\EntregadorController;
 use App\Http\Controllers\API\ProdutoController;
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\VeiculoController;
-use App\Http\Controllers\ConversasController;
-use App\Http\Controllers\TipoEncomendaController;
-use App\Http\Controllers\TipoVeiculosController;
+use App\Http\Controllers\API\VeiculoController;
+use App\Http\Controllers\API\ConversasController;
+use App\Http\Controllers\API\TipoEncomendaController;
+use App\Http\Controllers\API\TipoVeiculosController;
+use App\Http\Controllers\API\PedidoController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +34,7 @@ Route::get('listar_veiculo', [VeiculoController::class, 'index']);
 Route::post('cadastro_veiculo', [VeiculoController::class, 'store']);
 Route::get('/detalhar_veiculo/{id}', [VeiculoController::class, 'show']);
 Route::put('/atualizar_veiculo/{id}', [VeiculoController::class, 'update']);
-Route::get('/eliminar_veiculo/{id}', [VeiculoController::class, 'destroy']);
+Route::delete('/eliminar_veiculo/{id}', [VeiculoController::class, 'destroy']);
 
                 //===========CRUD de Cliente===========//
 Route::get('/listar_cliente', [ClienteController::class, 'index']);
@@ -47,14 +49,14 @@ Route::get('listar_conversas', [ConversasController::class, 'index']);
 Route::post('cadastro_conversas', [ConversasController::class, 'store']);
 Route::get('/detalhar_conversas/{id}', [ConversasController::class, 'show']);
 Route::put('/atualizar_conversas/{id}', [ConversasController::class, 'update']);
-Route::get('/eliminar_conversas/{id}', [ConversasController::class, 'destroy']);
+Route::delete('/eliminar_conversas/{id}', [ConversasController::class, 'destroy']);
 
 //=======================CRUDE DO TIPO_DE_ENCOMENDA===================//
 Route::get('listar_tipo_de_encomenda', [TipoEncomendaController::class, 'index']);
 Route::post('cadastro_tipo_de_encomenda', [TipoEncomendaController::class, 'store']);
 Route::get('detalhar_tipo_de_encomenda/{id}', [TipoEncomendaController::class, 'show']);
 Route::put('atualizar_tipo_de_encomenda/{id}', [TipoEncomendaController::class, 'update']);
-Route::get('eliminar_tipo_de_encomenda/{id}', [TipoEncomendaController::class, 'destroy']);
+Route::delete('eliminar_tipo_de_encomenda/{id}', [TipoEncomendaController::class, 'destroy']);
 
 
 //================CRUD TIPO_DE_VEICULO============//
@@ -62,7 +64,7 @@ Route::get('listar_tipo_de_veiculo', [TipoVeiculosController::class, 'index']);
 Route::post('cadastro_tipo_de_veiculo', [TipoVeiculosController::class, 'store']);
 Route::get('detalhar_tipo_de_veiculo/{id}', [TipoVeiculosController::class, 'show']);
 Route::put('atualizar_tipo_de_veiculo/{id}', [TipoVeiculosController::class, 'update']);
-Route::get('eliminar_tipo_de_veiculo/{id}', [TipoVeiculosController::class, 'destroy']);
+Route::delete('eliminar_tipo_de_veiculo/{id}', [TipoVeiculosController::class, 'destroy']);
 
 
 
@@ -93,3 +95,11 @@ Route::delete('/eliminar_produto/{id}', [ProdutoController::class, 'destroy']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);  
+
+            //==============CRUD DO PEDIDO===========//
+Route::get('/listar_pedido', [PedidoController::class, 'index']);
+Route::post('/cadastrar_pedido', [PedidoController::class, 'store']);
+Route::get('/detalhar_pedido/{id}', [PedidoController::class, 'show']);
+Route::put('/atualizar_pedido/{id}', [PedidoController::class, 'update']);
+Route::delete('/eliminar_pedido/{id}', [PedidoController::class, 'destroy']);
+
