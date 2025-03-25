@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('produtos', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_tipo_encomenda'); 
-            $table->string('nome');
-             $table->text('descricao'); 
+            $table->string('produtos'); 
+            $table->integer('quantidade');
+             $table->string('localisação'); 
             
             $table->timestamps();
         });
     }
+   
 
     /**
      * Reverse the migrations.
