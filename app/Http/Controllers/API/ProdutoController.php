@@ -27,9 +27,9 @@ class ProdutoController extends Controller
     public function store(Request $request){
 
         $produto= new Produto();
-        $produto->id_tipo_encomenda=$request->id_tipo_encomenda;
-        $produto->nome=$request->nome;
-        $produto->descricao=$request->descricao;
+        $produto->produto=$request->produto;
+        $produto->quantidade=$request->quantidade;
+        $produto->localizacao=$request->localizacao;
         $produto->save();
         return "cadastro bem sucedido!";
     }
@@ -62,9 +62,9 @@ class ProdutoController extends Controller
             // Produto não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
             return response()->json(['Produto não encontrado'], 404);
         }
-        $produto->id_tipo_encomenda=$request->id_tipo_encomenda;
-        $produto->nome=$request->nome;
-        $produto->descricao=$request->descricao;
+        $produto->produto=$request->produto;
+        $produto->quantidade=$request->quantidade;
+        $produto->localizacao=$request->localizacao;
         $produto->save();
         return response()->json (['Atualizado com sucesso!']);
         

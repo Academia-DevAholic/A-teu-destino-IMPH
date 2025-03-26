@@ -49,9 +49,14 @@ class EntregadorController extends Controller
              // Criar o entregador e associar o ID do Usuário
              $entregador= new Entregador();
              $entregador->name=$request->name;
+             $entregador->telefone=$request->telefone;
              $entregador->email=$request->email;
              $entregador->password = bcrypt($request->password); // Criptografando a senha
              $entregador->id_usuario = $user->id; // Atribuindo o ID do Usuário ao entregador
+             $entregador->carta_de_conducao=$request->carta_de_conducao;
+             $entregador->anexo_bi=$request->anexo_bi;
+             $entregador->fotografia=$request->fotografia;
+             $entregador->tempo_de_partida=$request->tempo_de_partida;
              $entregador->save();
  
              // Se ambos foram criados com sucesso, fazemos o commit da transação
@@ -97,19 +102,47 @@ class EntregadorController extends Controller
  
      //Metodo para atualizar entregador.
      public function update(Request $request, string $id)
-     {
-         $entregador=Entregador::find($id);
-         if (!$entregador) {
-             // entregador não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
-             return response()->json(['entregador não encontrado'], 404);
-         }
-         $entregador->name=$request->name;
-         $entregador->email=$request->email;
-         $entregador->password=$request->password;
-         $entregador->id_usuario=$request->id_usuario;
-         $entregador->save();
-         return respose()->json(["edicao bem sucedida!"]);
-     }
+{
+    // Validação dos dados recebidos
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'telefone' => 'required|string|max:15', // Validação para o telefone
+        'email' => 'required|email|unique:entregadors,email,' . $id, // Valida se o email é único, exceto para o entregador atual
+        'password' => 'nullable|string|min:8', // Senha opcional
+    ]);
+
+    // Tenta encontrar o entregador com o ID fornecido
+    $entregador = Entregador::find($id);
+
+    // Verifica se o entregador foi encontrado
+    if (!$entregador) {
+        // Se não encontrar, retorna uma resposta 404 com uma mensagem de erro
+        return response()->json(['message' => 'Entregador não encontrado'], 404);
+    }
+
+    // Verifica se o email já está em uso por outro entregador
+    $emailExistente = Entregador::where('email', $request->email)
+                                ->where('id', '!=', $id) // Ignora o entregador atual
+                                ->first();
+
+    if ($emailExistente) {
+        // Se o email já estiver em uso, retorna uma resposta de erro
+        return response()->json(['message' => 'O email informado já está em uso.'], 400);
+    }
+
+    // Se o entregador foi encontrado e o email é válido, realiza a atualização
+    $entregador->name = $request->name;
+    $entregador->telefone = $request->telefone;
+    $entregador->email = $request->email;
+    $entregador->password = $request->password ? bcrypt($request->password) : $entregador->password; // Criptografa a senha se fornecida
+
+    // Salva as alterações no banco de dados
+    $entregador->save();
+
+    // Retorna uma resposta de sucesso com uma mensagem
+    return response()->json(["message" => "Edição bem-sucedida!"]);
+}
+
  
  
      ////metodo para eliminar entregador.

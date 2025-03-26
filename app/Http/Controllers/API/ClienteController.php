@@ -47,6 +47,7 @@ class ClienteController extends Controller
                 // Criar o Cliente e associar o ID do Usuário
                 $cliente = new Cliente();
                 $cliente->name = $request->name;
+                $cliente->telefone = $request-> telefone;
                 $cliente->email = $request->email;
                 $cliente->password = bcrypt($request->password); // Criptografando a senha
                 $cliente->id_usuario = $user->id; // Atribuindo o ID do Usuário ao Cliente
@@ -110,6 +111,7 @@ class ClienteController extends Controller
     
         // Atualizar os dados do Cliente
         $cliente->name = $request->name;
+        $cliente->telefone = $request->telefone;
         $cliente->email = $request->email;
         $cliente->password = bcrypt($request->password); // Não se esqueça de criptografar a senha!
     
@@ -123,6 +125,7 @@ class ClienteController extends Controller
         if ($user) {
             // Atualizar os dados do Usuário
             $user->name = $request->name;
+            $user->telefone = $request->telefone;
             $user->email = $request->email;
             $user->password = bcrypt($request->password); // Criptografando a senha do usuário também
             $user->save();

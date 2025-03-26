@@ -10,6 +10,7 @@ class Entregador extends Model
     use HasFactory;
     protected $fillable = [
         'name', 
+        'telefone',
         'email', 
         'password', 
         'perfil', // Adicionado o campo 'perfil' no fillable

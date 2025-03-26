@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('preco', 10, 2);
             $table->enum('status', ['pendente', 'em andamento', 'concluída']); 
             $table->string('ponto_partida'); 
-            $table->string('ponto_chegada'); 
+            $table->string('data_encomenda'); 
             $table->integer('tempo_de_partida'); // Tempo estimado (em minutos ou segundos) 
            
             $table->timestamps();
