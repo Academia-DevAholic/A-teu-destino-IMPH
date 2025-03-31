@@ -1,16 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Veiculo;
+use Illuminate\Http\Request;
 
 class VeiculoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    // Metodo para listar 
     public function index()
     {
     
