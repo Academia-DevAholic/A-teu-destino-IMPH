@@ -160,4 +160,50 @@ class EntregadorController extends Controller
          // Retorna uma mensagem de sucesso
          return response()->json([ 'entregador eliminado com sucesso!']);
   }
+
+    // metodo para carregar fotagrafia 
+  public function carregar_foto(Request $request, $id)
+    {
+        $request->validate([
+            'fotografia' => 'required|image', // Garante que é uma imagem, sem restrição de formato
+        ]);
+
+        // Busca o usuário pelo ID
+        $entregador = Entregador::findOrFail($id);
+
+        // Verifica se há arquivos antigos do usuário e remove todos
+        $fotografia
+        PerfilPath = public_path('fotografia
+        _Perfil/');
+        $arquivos = glob($fotografia
+        PerfilPath . 'fotografia
+        _perfil' . $entregador->id . '.*'); // Encontra todas as fotografia
+        // s do usuário
+
+        foreach ($arquivos as $arquivo) {
+            if (file_exists($arquivo)) {
+                unlink($arquivo); // Remove a fotografia
+                //  antiga
+            }
+        }
+
+        // Processa o novo arquivo
+        $file = $request->file('fotografia');
+        $extension = $file->getClientOriginalExtension();
+        $filename = "fotografia_perfil" . $entregador . $extension;
+
+        // Move a nova fotografia
+        //  para a pasta correta
+        $file->move($fotografia
+        PerfilPath, $filename);
+
+        // Atualiza o caminho da fotografia
+        //  no banco de dados
+        $user->update(['fotografia _perfil' => 'fotografia _Perfil/' . $filename]);
+
+        return response()->json([
+            'message' => 'fotografia de perfil carregada com sucesso!',
+            'fotografia_perfil' => url('fotografia_Perfil/' . $filename)
+        ], 200);
+    }
 }

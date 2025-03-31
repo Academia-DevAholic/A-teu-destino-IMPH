@@ -80,6 +80,7 @@ Route::post('/cadastrar_entregador',[EntregadorController::class, 'store']);
 Route::get('/detalhar_entregador/{id}',[EntregadorController::class, 'show']);
 Route::put('/atualizar_entregador/{id}',[EntregadorController::class, 'update']);
 Route::delete('/eliminar_entregador/{id}',[EntregadorController::class, 'destroy']);
+Route::put('/carregar_foto/{id}',[EntregadorController::class, 'carregar_foto']);
 
 
                 //===========CRUD do produto===========//
