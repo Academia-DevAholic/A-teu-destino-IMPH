@@ -29,15 +29,14 @@ class EncomendaController extends Controller
     public function store(Request $request){
     
         $encomenda= new Encomenda();
-        $encomenda->id_produto=$request->id_produto;
+        $encomenda->id_pedido=$request->id_pedido;
         $encomenda->id_cliente=$request->id_cliente;
         $encomenda->id_entregador=$request->id_entregador;
         $encomenda->preco=$request->preco;
         $encomenda->status=$request->status;
-        $encomenda->data_encomenda=$request->data_encomenda;
         $encomenda->ponto_partida=$request->ponto_partida;
-        $encomenda->ponto_chegada=$request->ponto_chegada;
-        $encomenda->tempo=$request->tempo;
+        $encomenda->data_encomenda=$request->data_encomenda;
+        $encomenda->tempo_de_partida=$request->tempo_de_partida;
         $encomenda->save();
         return "cadastro bem sucedido!";
     }
@@ -71,15 +70,14 @@ class EncomendaController extends Controller
             // encomenda não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
             return response()->json(['encomenda não encontrado'], 404);
         }
-        $encomenda->id_produto=$request->id_produto;
+        $encomenda->id_pedido=$request->id_pedido;
         $encomenda->id_cliente=$request->id_cliente;
         $encomenda->id_entregador=$request->id_entregador;
         $encomenda->preco=$request->preco;
         $encomenda->status=$request->status;
-        $encomenda->data_encomenda=$request->data_encomenda;
         $encomenda->ponto_partida=$request->ponto_partida;
-        $encomenda->ponto_chegada=$request->ponto_chegada;
-        $encomenda->tempo=$request->tempo;
+        $encomenda->data_encomenda=$request->data_encomenda;
+        $encomenda->tempo_de_partida=$request->tempo_de_pertida;
         $encomenda->save();
         return response()->json(["atualizado com sucesso!"]);
     }
