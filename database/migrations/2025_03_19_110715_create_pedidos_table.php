@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
-            $table->string('produto');
             $table->unsignedBigInteger('id_cliente');
             $table->enum('status', ['pendente', 'em andamento', 'concluída']);
-            $table->string('localizacao');
             $table->timestamps();
 
               // Definindo a chave estrangeira
