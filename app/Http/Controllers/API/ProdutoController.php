@@ -37,22 +37,29 @@ class ProdutoController extends Controller
             'quantidade.gt' => 'A quantidade deve ser maior que zero.', // Mensagem personalizada
             'id_pedido.exists' => 'O id_pedido fornecido não existe.', // Mensagem personalizada
         ]);
-    
+        
         // Se a validação passar, cria o produto
         $produto = new Produto();
         $produto->produto = $request->produto;
         $produto->quantidade = $request->quantidade;
         $produto->localizacao = $request->localizacao;
-        $produto->id_pedido_
+        $produto->id_pedido = $request->id_pedido;
     
+        // Salva o produto no banco de dados
+        $produto->save();
+        
+        // Retorna uma resposta em JSON com os dados do produto salvo
+        return response()->json([
+            'message' => 'Produto criado com sucesso!',
+            'produto' => $produto // Retorna os dados do produto criado
+        ], 201); // Status 201: Created
+    }
     
-    
-
     //Metodo para detalhar produto.
     public function show(string $id)
     {
         $produto=Produto::find($id);
-        if (!$produto) {
+        if ($produto) {
             // Produto não encontrado, você pode retornar uma mensagem de erro ou uma resposta 404
             return response()->json(['Produto não encontrado'], 404);
         }
@@ -121,4 +128,9 @@ class ProdutoController extends Controller
     // Retorna uma mensagem de sucesso
     return response()->json([ 'Produto eliminado com sucesso!']);
     }
+
+
 }
+
+
+
