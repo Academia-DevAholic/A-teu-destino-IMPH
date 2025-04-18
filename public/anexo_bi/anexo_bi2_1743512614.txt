@@ -1,0 +1,16 @@
+λ php artisan make:controller PessoaController criar um controlador
+
+php artisan migrate  banco de dados
+
+ CRUD faser cadastrar os dados no banco de dados e 
+
+λ mysql -u root -p
+ php artisan migrate:status
+
+λ php artisan migrate
+
+
+ php artisan migrate:status
+
+ php artisan make:model Pessoal -m
+λ php artrisan make:model Pessoal -m

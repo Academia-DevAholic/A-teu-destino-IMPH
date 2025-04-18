@@ -103,6 +103,12 @@ Route::post('/cadastrar_entregador',[EntregadorController::class, 'store']);
 Route::get('/detalhar_entregador/{id}',[EntregadorController::class, 'show']);
 Route::put('/atualizar_entregador/{id}',[EntregadorController::class, 'update']);
 Route::delete('/eliminar_entregador/{id}',[EntregadorController::class, 'destroy']);
+Route::post('/carregar_foto/{id}', [EntregadorController::class, 'carregar_foto']);
+Route::delete('/eliminar_foto/{id}', [EntregadorController::class, 'remover_foto']);
+Route::post('carregar_carta_de_conducao/{id}', [EntregadorController::class, 'carta_de_conducao']);
+Route::delete('eliminar_carta_de_conducao/{id}', [EntregadorController::class, 'remover_carta_de_conducao']);
+Route::post('carregar_anexo_bi/{id}', [EntregadorController::class, 'carregar_anexo_bi']);
+Route::delete('eliminar_anexo_bi/{id}', [EntregadorController::class, 'remover_anexo_bi']);
 
 
                 //===========CRUD do produto===========//

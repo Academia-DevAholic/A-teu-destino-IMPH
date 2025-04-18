@@ -12,14 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('produtos', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // Cria a chave primária
             $table->string('produto'); 
             $table->integer('quantidade');
-             $table->string('localizacao'); 
+            $table->string('localizacao');
             
-            $table->timestamps();
+            // Adiciona a coluna id_pedido como uma chave estrangeira
+            $table->unsignedBigInteger('id_pedido'); // A coluna id_pedido é do tipo BIGINT (unsigned)
+            $table->foreign('id_pedido')->references('id')->on('pedidos')->onDelete('cascade'); // Define a chave estrangeira para id_pedido
+            
+            $table->timestamps(); // Cria as colunas created_at e updated_at
         });
     }
+    
    
 
     /**
