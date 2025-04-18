@@ -16,8 +16,19 @@ class PedidoController extends Controller
     // Metodo para listar pedido
     public function index()
     {
-        $pedido=Pedido::all();
-        return $pedido;
+        try {
+            $pedidos = Pedido::orderBy('created_at', 'desc')->get();
+            return response()->json([
+                'success' => true,
+                'data' => $pedidos
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao carregar lista de pedidos',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -37,6 +48,7 @@ class PedidoController extends Controller
                    'id_cliente' => $request->id_cliente,
                    'status' => $request->status
                ]);
+               
        
                return response()->json([
                    'success' => true,

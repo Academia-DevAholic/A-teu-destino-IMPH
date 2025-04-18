@@ -17,10 +17,8 @@ return new class extends Migration
             $table->integer('id_entregador');
             $table->string('marca');
             $table->string('modelo'); 
-           $table->string('documento'); 
-           $table->string('matricula');
-           
-            
+            $table->string('documento')->nullable(); // Permite valores nulos
+            $table->string('matricula')->unique();   // Garante valores únicos
             $table->timestamps();
         });
     }
