@@ -86,7 +86,7 @@ class ClienteController extends Controller
     // Validação dos dados
     $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email|unique:clientes,email',
+        'email' => 'nullable|email|unique:users,email|unique:clientes,email',
         'password' => [
             'required',
             'string',
