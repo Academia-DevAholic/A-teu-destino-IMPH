@@ -8,6 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Veiculo extends Model
 {
     use HasFactory;
+    
+    protected $fillable = [
+        'id_tipo_veiculo',
+        'id_entregador',
+        'marca',
+        'modelo',
+        'documento',
+        'matricula'
+    ];
+
 
       // Relacionamento: um veiculo pertence a um tipo de veiculo
       public function tipoVeiculo()

@@ -12,6 +12,8 @@ use App\Http\Controllers\API\ConversasController;
 use App\Http\Controllers\API\TipoEncomendaController;
 use App\Http\Controllers\API\TipoVeiculosController;
 use App\Http\Controllers\API\PedidoController;
+use App\Http\Controllers\API\SolicitacaoController;
+
 use App\Http\Controllers\API\NotificacoesController;
 
 
@@ -36,6 +38,9 @@ Route::post('cadastro_veiculo', [VeiculoController::class, 'store']);
 Route::get('/detalhar_veiculo/{id}', [VeiculoController::class, 'show']);
 Route::put('/atualizar_veiculo/{id}', [VeiculoController::class, 'update']);
 Route::delete('/eliminar_veiculo/{id}', [VeiculoController::class, 'destroy']);
+Route::post('/veiculos/{id}/carregar-documento', [VeiculoController::class, 'carregar_documento']);
+Route::delete('/veiculos/{id}/eliminar-documento', [VeiculoController::class, 'eliminar_documento']);
+
 
                 //===========CRUD de Cliente===========//
 Route::get('/listar_cliente', [ClienteController::class, 'index']);
@@ -51,6 +56,22 @@ Route::post('cadastro_conversas', [ConversasController::class, 'store']);
 Route::get('/detalhar_conversas/{id}', [ConversasController::class, 'show']);
 Route::put('/atualizar_conversas/{id}', [ConversasController::class, 'update']);
 Route::delete('/eliminar_conversas/{id}', [ConversasController::class, 'destroy']);
+Route::post('/enviar_coversas', [ConversasController::class, 'enviarMensagem']);
+Route::post('/visualizar_convrsas/{id}', [ConversasController::class, 'marcarComoVisualizada']);
+Route::patch('/conversas/{id}/visualizar', [ConversasController::class, 'marcarComoVisualizada']);
+
+//Enviar Mensagem
+Route::post('/enviar_mensagem', [ConversasController::class, 'enviarMensagem'])
+     ->middleware('auth:sanctum');
+Route::get('/listar_mensagem', [ConversasController::class, 'listarMensagens'])
+     ->middleware('auth:sanctum');
+
+Route::get('/conversas', [ConversasController::class, 'listarConversas'])
+     ->middleware('auth:sanctum');
+
+     Route::middleware('auth:api')->group(function () {
+        Route::get('/conversas/{conversaId}/mensagens', [ConversasController::class, 'listarMensagens']);
+    });
 
 //=======================CRUDE DO TIPO_DE_ENCOMENDA===================//
 Route::get('listar_tipo_de_encomenda', [TipoEncomendaController::class, 'index']);
@@ -111,6 +132,13 @@ Route::get('/detalhar_pedido/{id}', [PedidoController::class, 'show']);
 Route::put('/atualizar_pedido/{id}', [PedidoController::class, 'update']);
 Route::delete('/eliminar_pedido/{id}', [PedidoController::class, 'destroy']);
 
+           //=============CRUD Da Solicitacao=============//
+Route::get('/listar_solicitacao', [SolicitacaoController::class, 'index']);
+Route::post('/cadastrar_solicitacao', [SolicitacaoController::class, 'store']);
+Route::get('/detalhar_solicitacao/{id}', [SolicitacaoController::class, 'show']);
+Route::put('/atualizar_solicitacao/{id}', [SolicitacaoController::class, 'update']);
+Route::delete('/eliminar_solicitacao/{id}', [SolicitacaoController::class, 'destroy']);
+          
 
         //================CRUD DAS Notificacoes========//
 Route::get('/listar_notificacoes', [NotificacoesController::class, 'index']);
