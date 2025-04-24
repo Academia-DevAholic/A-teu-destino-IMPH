@@ -14,6 +14,7 @@ use App\Http\Controllers\API\TipoVeiculosController;
 use App\Http\Controllers\API\PedidoController;
 use App\Http\Controllers\API\SolicitacaoController;
 
+use App\Http\Controllers\API\NotificacoesController;
 
 
 /*
@@ -138,4 +139,14 @@ Route::get('/detalhar_solicitacao/{id}', [SolicitacaoController::class, 'show'])
 Route::put('/atualizar_solicitacao/{id}', [SolicitacaoController::class, 'update']);
 Route::delete('/eliminar_solicitacao/{id}', [SolicitacaoController::class, 'destroy']);
           
+
+        //================CRUD DAS Notificacoes========//
+Route::get('/listar_notificacoes', [NotificacoesController::class, 'index']);
+Route::post('/cadastrar_notificacoes', [NotificacoesController::class, 'store']);
+Route::get('/detalhar_notificacoes/{id}', [NotificacoesController::class, 'show']);
+Route::put('/atualizar_notificacoes/{id}', [NotificacoesController::class, 'update']);
+Route::delete('/eliminar_notificacoes/{id}', [NotificacoesController::class, 'destroy']);
+Route::middleware('auth:sanctum')->get('/notificacoes', [NotificacoesController::class, 'minhasNotificacoes']);
+
+
 

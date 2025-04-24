@@ -36,34 +36,63 @@ class PedidoController extends Controller
      */
        // Metodo para cadastrar pedido
        public function store(Request $request)
-       {
-           // Validação básica dos campos obrigatórios
-           $request->validate([
-               'id_cliente' => 'required|integer|exists:clientes,id',
-               'status' => 'required|in:pendente,em andamento,concluída'
-           ]);
-       
-           try {
-               $pedido = Pedido::create([
-                   'id_cliente' => $request->id_cliente,
-                   'status' => $request->status
-               ]);
-               
-       
-               return response()->json([
-                   'success' => true,
-                   'message' => 'Pedido criado com sucesso',
-                   'data' => $pedido
-               ], 201);
-       
-           } catch (\Exception $e) {
-               return response()->json([
-                   'success' => false,
-                   'message' => 'Erro ao criar o pedido',
-                   'error' => $e->getMessage()
-               ], 500);
-           }
-       }
+{
+    // Validação básica dos campos obrigatórios
+    $request->validate([
+        'id_cliente' => 'required|integer|exists:clientes,id',
+        'status' => 'required|in:pendente,em andamento,concluída'
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        // Criar o pedido
+        $pedido = Pedido::create([
+            'id_cliente' => $request->id_cliente,
+            'status' => $request->status
+        ]);
+
+        // Obter o cliente associado ao pedido
+        $cliente = Cliente::findOrFail($request->id_cliente);
+        
+        // Encontrar um entregador disponível (lógica de sua escolha)
+        $entregador = User::where('perfil', 'entregador')
+                         ->where('disponivel', true)
+                         ->inRandomOrder()
+                         ->first();
+
+        if ($entregador) {
+            // Criar notificação para o entregador
+            $notificacao = Notificacoes::create([
+                'usuario_id' => $entregador->id,
+                'tipo_de_notificacao' => 'novo_pedido',
+                'status' => false, // Não lida
+                'descricao' => "Novo pedido #{$pedido->id} disponível para entrega - Cliente: {$cliente->name}",
+                'data_envio' => now(),
+                'pedido_id' => $pedido->id // Adicione esta coluna na tabela se quiser relacionar
+            ]);
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pedido criado com sucesso',
+            'data' => [
+                'pedido' => $pedido,
+                'notificacao' => $notificacao ?? null
+            ]
+        ], 201);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro ao criar o pedido',
+            'error' => env('APP_DEBUG') ? $e->getMessage() : null
+        ], 500);
+    }
+}
     /**
      * Display the specified resource.
      */

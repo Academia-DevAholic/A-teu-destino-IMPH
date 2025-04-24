@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator; // Importação adicionada
 use App\Models\Entregador;
+use App\Models\Notificacoes;
 use App\Models\User;
 use Illuminate\Support\Facades\DB; // Importando o DB
 use Illuminate\Support\Facades\Hash;
@@ -13,70 +15,159 @@ class EntregadorController extends Controller
 {
     
         //Metodo para listar entregador.
-        public function index()
-         {
-             $entregador=Entregador::all();
-             return $entregador;
-        }
- 
-     
-        //metodo para cadastro de entregador.
-        public function store(Request $request)
+        public function index(Request $request)
         {
+            // Verifica primeiro se é um perfil de entregador
+            if ($request->has('id_usuario')) {
+                $user = User::find($request->id_usuario);
+                
+                if ($user && $user->perfil !== 'entregador') {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'O ID informado não pertence a um entregador',
+                        'user_perfil' => $user->perfil
+                    ], 404);
+                }
+            }
         
-             // Validação dos dados do entregador e do Usuário
-             $request->validate([
-             'name' => 'required|string|max:255',
-             'email' => 'required|email|unique:users,email', // O email deve ser único na tabela users
-             'password' => 'required|string|min:8', // A senha deve ter pelo menos 8 caracteres
-        ]);
- 
-            // Iniciar uma transação
-            DB::beginTransaction();
- 
-            try {
-             // Criar o Usuário
-             $user = User::create([
-             'name' => $request->name,
-             'email' => $request->email,
-             'password' => bcrypt($request->password), // Criptografando a senha
-             'perfil' => 'entregador', // Perfil "entregador" para o usuário
-        ]);
- 
-             // Criar o entregador e associar o ID do Usuário
-             $entregador= new Entregador();
-             $entregador->name=$request->name;
-             $entregador->telefone=$request->telefone;
-             $entregador->email=$request->email;
-             $entregador->password = bcrypt($request->password); // Criptografando a senha
-             $entregador->id_usuario = $user->id; // Atribuindo o ID do Usuário ao entregador
-             $entregador->carta_de_conducao=$request->carta_de_conducao;
-             $entregador->anexo_bi=$request->anexo_bi;
-             $entregador->fotografia=$request->fotografia;
-             $entregador->tempo_de_partida=$request->tempo_de_partida;
-             $entregador->save();
- 
-             // Se ambos foram criados com sucesso, fazemos o commit da transação
-             DB::commit();
- 
-             return response()->json([
-                 'message' => 'Cadastro de entregador e Usuário bem-sucedido!',
-                 'entregador' => $entregador, // Retornando o entregador criado
-                 'user' => $user, // Retornando o Usuário criado
-             ], 201);
- 
-             } catch (\Exception $e) {
-             // Se ocorrer algum erro, fazemos o rollback da transação
-             DB::rollBack();
- 
-             // Retornamos uma resposta de erro com a mensagem
-             return response()->json([
-                 'message' => 'Erro ao criar entregador ou Usuário.',
-                 'error' => $e->getMessage(),
-             ], 500);
+            $query = Entregador::query();
+            
+            // Filtros
+            if ($request->has('id_usuario')) {
+                $query->where('id_usuario', $request->id_usuario);
+            }
+            
+            if ($request->has('name')) {
+                $query->where('name', 'like', '%'.$request->name.'%');
+            }
+            
+            if ($request->has('email')) {
+                $query->where('email', $request->email);
+            }
+        
+            $entregadores = $query->orderBy('created_at', 'desc')
+                                 ->paginate(10);
+        
+            // Mensagem quando não encontra resultados
+            if ($entregadores->isEmpty()) {
+                $message = 'Nenhum entregador encontrado';
+                
+                if ($request->id_usuario) {
+                    $message .= ' com o ID de usuário '.$request->id_usuario;
+                }
+                if ($request->name) {
+                    $message .= ($request->id_usuario ? ' e' : ' com') . 
+                               ' nome contendo "'.$request->name.'"';
+                }
+                if ($request->email) {
+                    $message .= (($request->id_usuario || $request->name) ? ' e' : ' com') .
+                               ' email "'.$request->email.'"';
+                }
+        
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                    'suggestion' => 'Verifique os filtros ou cadastre um novo entregador'
+                ], 404);
+            }
+        
+            return response()->json([
+                'success' => true,
+                'data' => $entregadores
+            ]);
         }
-    }
  
+        //metodo para cadastrar entregador 
+        public function store(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'email' => 'nullable|email|unique:users,email|unique:entregadors,email',
+        'password' => [
+            'required',
+            'string',
+            'min:8',
+            'regex:/[a-z]/',
+            'regex:/[A-Z]/',
+            'regex:/[0-9]/',
+            'regex:/[@$!%*#?&]/',
+        ],
+        'telefone' => 'required|string|max:20'
+    ], [
+        'password.required' => 'A senha é obrigatória',
+        'password.min' => 'A senha deve ter no mínimo 8 caracteres',
+        'password.regex' => 'A senha deve conter: 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial (@$!%*#?&)',
+        'email.unique' => 'Este e-mail já está registrado',
+        'required' => 'O campo :attribute é obrigatório'
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro de validação',
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    DB::beginTransaction();
+
+    try {
+        // Criar o usuário
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'perfil' => 'entregador'
+        ]);
+
+        // Criar o entregador
+        $entregador = Entregador::create([
+            'name' => $request->name,
+            'telefone' => $request->telefone,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'id_usuario' => $user->id
+        ]);
+
+        // Criar notificações automática de boas-vindas
+        $notificacoes= Notificacoes::create([
+            'usuario_id' => $user->id, // ID do usuário recém-criado
+            'tipo_de_notificacao' => 'conta_criada',
+            'status' => false, // Não lida por padrão
+            'descricao' => "Olá {$user->name}, seja bem-vindo(a) como entregador!",
+            'data_envio' => now(),
+        ]);
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cadastro realizado com sucesso!',
+            'data' => [
+                'user' => $user,
+                'entregador' => $entregador,
+                'notificacoes' => $notificacoes // Opcional: incluir na resposta
+            ]
+        ], 201);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+         // Tratamento específico para erros de duplicação de e-mail
+         if (str_contains($e->getMessage(), 'Duplicate entry') && str_contains($e->getMessage(), 'email')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Este e-mail já está registrado no sistema'
+            ], 422);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro no cadastro',
+            'error' => env('APP_DEBUG') ? $e->getMessage() : null
+        ], 500);
+    }
+}
 
     //Metodo para detalhar entrgador.
     public function show(string $id)

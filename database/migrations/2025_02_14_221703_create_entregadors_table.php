@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('telefone');
-            $table->string('email')->unique();
+            $table->string('email')->unique()->nullable();
             $table->string('password');
             $table->string('perfil')->default('entregador');
             $table->integer('id_usuario'); 
             $table->enum('status', ['pendente', 'em andamento', 'concluída'])->default('pendente'); 
-            $table->text('carta_de_conducao'); 
+            $table->text('carta_de_conducao')->nullable(); 
             $table->text('anexo_bi');
             $table->text('fotografia');
             $table->string('tempo_de_partida');
