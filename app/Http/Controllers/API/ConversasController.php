@@ -127,25 +127,25 @@ class ConversasController extends Controller
 
      //Listar mensagens
      public function listarConversas()
-{
-    $userId = auth()->id();
-    
-    $conversas = Conversa::with(['ultimaMensagem', 'outroUsuario'])
-        ->where('usuario_um_id', $userId)
-        ->orWhere('usuario_dois_id', $userId)
-        ->orderByDesc(
-            Mensagens::select('created_at')
-                ->whereColumn('conversa_id', 'conversas.id')
-                ->latest()
-                ->take(1)
-        )
-        ->get();
-
-    return response()->json([
-        'success' => true,
-        'data' => $conversas
-    ]);
-}
+     {
+         $userId = auth()->id();
+         
+         $conversas = Conversa::with(['ultimaMensagem', 'outroUsuario'])
+             ->where('usuario_um_id', $userId)
+             ->orWhere('usuario_dois_id', $userId)
+             ->orderByDesc(
+                 Mensagens::select('created_at')
+                     ->whereColumn('conversa_id', 'conversas.id')
+                     ->latest()
+                     ->take(1)
+             )
+             ->get();
+     
+         return response()->json([
+             'success' => true,
+             'data' => $conversas
+         ]);
+     }
  
      // Lista mensagens de uma conversa
      public function listarMensagens1($conversaId)
