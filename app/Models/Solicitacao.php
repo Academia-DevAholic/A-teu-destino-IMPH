@@ -30,4 +30,37 @@ class Solicitacao extends Model
     {
         return $this->belongsTo(Entregador::class, 'id_entregador');
     }
+
+    
+
+    public function aceitar(Entregador $entregador)
+    {
+        if ($this->status !== 'pendente') {
+            throw new \Exception('Esta solicitação já foi processada.');
+        }
+
+        $this->entregador()->associate($entregador);
+        $this->status = 'aceita';
+        $this->save();
+
+        // Aqui você pode adicionar notificações ou outros eventos
+        return $this;
+    }
+
+    /**
+     * Método para rejeitar a solicitação
+     */
+    public function rejeitar(Entregador $entregador)
+    {
+        if ($this->status !== 'pendente') {
+            throw new \Exception('Esta solicitação já foi processada.');
+        }
+
+        $this->entregador()->associate($entregador);
+        $this->status = 'rejeitada';
+        $this->save();
+
+        return $this;
+    }
+
 }

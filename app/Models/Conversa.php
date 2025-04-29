@@ -54,4 +54,9 @@ public function outroUsuario()
         return $this->belongsTo(User::class, 'usuario_um_id');
     }
 }
+// Adicione este método à sua model Conversa
+public function mensagens()
+{
+    return $this->hasMany(Mensagens::class, 'conversa_id');
+}
 }

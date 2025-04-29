@@ -126,6 +126,7 @@ class ConversasController extends Controller
      }
 
      //Listar mensagens
+     /*
      public function listarConversas()
      {
          $userId = auth()->id();
@@ -146,25 +147,38 @@ class ConversasController extends Controller
              'data' => $conversas
          ]);
      }
- 
-     // Lista mensagens de uma conversa
-     public function listarMensagens1($conversaId)
+ */
+
+ public function listarConversas()
 {
-    // Verifica se a conversa existe
-    if (!Conversa::where('id', $conversaId)->exists()) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Conversa não encontrada'
-        ], 404);
-    }
-
-    $mensagens = Mensagens::where('conversa_id', $conversaId)
-                       ->orderBy('created_at', 'desc')
-                       ->get();
-
+    $userId = auth()->id();
+    
+    $conversas = Conversa::with(['mensagens' => function($query) {
+            $query->orderBy('created_at', 'desc');
+        }])
+        ->where('usuario_um_id', $userId)
+        ->orWhere('usuario_dois_id', $userId)
+        ->get()
+        ->map(function ($conversa) use ($userId) {
+            return [
+                'conversa_id' => $conversa->id,
+                'usuario_um_id' => $conversa->usuario_um_id,
+                'usuario_dois_id' => $conversa->usuario_dois_id,
+                'mensagens' => $conversa->mensagens->map(function ($mensagem) use ($userId) {
+                    return [
+                        'id' => $mensagem->id,
+                        'conteudo' => $mensagem->conteudo,
+                        'remetente_id' => $mensagem->remetente_id,
+                        'data_envio' => $mensagem->created_at->format('Y-m-d H:i:s'),
+                        'eh_meu' => $mensagem->remetente_id == $userId
+                    ];
+                })
+            ];
+        });
+    
     return response()->json([
         'success' => true,
-        'data' => $mensagens
+        'data' => $conversas
     ]);
 }
 

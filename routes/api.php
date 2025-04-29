@@ -69,8 +69,12 @@ Route::get('/listar_mensagem', [ConversasController::class, 'listarMensagens'])
 Route::get('/conversas', [ConversasController::class, 'listarConversas'])
      ->middleware('auth:sanctum');
 
+     Route::put('/solicitacoes/{id}/atualizar-status', [SolicitacaoController::class, 'atualizarStatus'])
+     ->middleware('auth:sanctum');
+
      Route::middleware('auth:api')->group(function () {
         Route::get('/conversas/{conversaId}/mensagens', [ConversasController::class, 'listarMensagens']);
+       // Route::put('/solicitacoes/{id}/atualizar-status', [SolicitacaoController::class, 'atualizarStatus']);
     });
 
 //=======================CRUDE DO TIPO_DE_ENCOMENDA===================//
@@ -138,7 +142,9 @@ Route::post('/cadastrar_solicitacao', [SolicitacaoController::class, 'store']);
 Route::get('/detalhar_solicitacao/{id}', [SolicitacaoController::class, 'show']);
 Route::put('/atualizar_solicitacao/{id}', [SolicitacaoController::class, 'update']);
 Route::delete('/eliminar_solicitacao/{id}', [SolicitacaoController::class, 'destroy']);
-          
+Route::post('/solicitacao/aceitar/{id}', [SolicitacaoController::class, 'aceitar']);
+Route::post('/solicitacao/rejeitar/{id}', [SolicitacaoController::class, 'rejeitar']);
+        
 
         //================CRUD DAS Notificacoes========//
 Route::get('/listar_notificacoes', [NotificacoesController::class, 'index']);

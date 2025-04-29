@@ -18,37 +18,19 @@ class PedidoController extends Controller
     // Metodo para listar pedido
     public function index(Request $request)
 {
-    try {
-        // Validação do parâmetro id_cliente (se fornecido)
-        $request->validate([
-            'id_cliente' => 'nullable|integer|exists:clientes,id'
-        ]);
-        
-        // Inicia a query com ordenação padrão
-        $query = Pedido::with(['cliente', 'itens']) // Carrega relacionamentos
-                    ->orderBy('created_at', 'desc');
-        
-        // Aplica filtro por cliente se fornecido
-        if ($request->filled('id_cliente')) {
-            $query->where('id_cliente', $request->id_cliente);
-        }
-        
-        // Obter resultados
-        $pedidos = $query->get();
-        
-        return response()->json([
-            'success' => true,
-            'count' => $pedidos->count(),
-            'data' => $pedidos
-        ]);
-        
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Erro ao carregar lista de pedidos',
-            'error' => env('APP_DEBUG') ? $e->getMessage() : null
-        ], 500);
+    // Cria a query base
+    $query = Pedido::query();
+    
+    // Verifica se foi passado o parâmetro id_cliente
+    if ($request->has('id_cliente')) {
+        // Filtra os pedidos pelo ID do cliente
+        $query->where('id_cliente', $request->id_cliente);
     }
+    
+    // Executa a query e retorna os resultados
+    $pedidos = $query->get();
+    
+    return $pedidos;
 }
     /**
      * Store a newly created resource in storage.
