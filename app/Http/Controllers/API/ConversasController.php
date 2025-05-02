@@ -150,37 +150,111 @@ class ConversasController extends Controller
  */
 
  public function listarConversas()
+ {
+     $userId = auth()->id();
+     
+     $conversas = Conversa::with(['mensagens'])
+         ->where('usuario_um_id', $userId)
+         ->orWhere('usuario_dois_id', $userId)
+         ->get()
+         ->map(function ($conversa) use ($userId) {
+             return [
+                 'conversa_id' => $conversa->id,
+                 'usuario_um_id' => $conversa->usuario_um_id,
+                 'usuario_dois_id' => $conversa->usuario_dois_id,
+                 'mensagens' => $conversa->mensagens->map(function ($mensagem) use ($userId) {
+                     return [
+                         'id' => $mensagem->id,
+                         'conteudo' => $mensagem->conteudo,
+                         'remetente_id' => $mensagem->remetente_id,
+                         'data_envio' => $mensagem->created_at->format('Y-m-d H:i:s'),
+                         'eh_meu' => $mensagem->remetente_id == $userId
+                     ];
+                 })
+             ];
+         });
+     
+     return response()->json([
+         'success' => true,
+         'data' => $conversas
+     ]);
+ }
+ 
+/**
+ * 
+ */
+// Metodo detalhar conversa//
+public function detalharConversa($conversaId)
 {
     $userId = auth()->id();
     
-    $conversas = Conversa::with(['mensagens' => function($query) {
-            $query->orderBy('created_at', 'desc');
-        }])
-        ->where('usuario_um_id', $userId)
-        ->orWhere('usuario_dois_id', $userId)
-        ->get()
-        ->map(function ($conversa) use ($userId) {
+    // Busca a conversa específica verificando se o usuário é um dos participantes
+    $conversa = Conversa::with(['mensagens'])
+        ->where(function($query) use ($userId) {
+            $query->where('usuario_um_id', $userId)
+                  ->orWhere('usuario_dois_id', $userId);
+        })
+        ->where('id', $conversaId)
+        ->first();
+
+    // Se não encontrar a conversa ou o usuário não tiver permissão
+    if (!$conversa) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Conversa não encontrada ou você não tem permissão para acessá-la.'
+        ], 404);
+    }
+
+    // Formata os dados da conversa
+    $conversaDetalhada = [
+        'conversa_id' => $conversa->id,
+        'usuario_um_id' => $conversa->usuario_um_id,
+        'usuario_dois_id' => $conversa->usuario_dois_id,
+        'mensagens' => $conversa->mensagens->map(function ($mensagem) use ($userId) {
             return [
-                'conversa_id' => $conversa->id,
-                'usuario_um_id' => $conversa->usuario_um_id,
-                'usuario_dois_id' => $conversa->usuario_dois_id,
-                'mensagens' => $conversa->mensagens->map(function ($mensagem) use ($userId) {
-                    return [
-                        'id' => $mensagem->id,
-                        'conteudo' => $mensagem->conteudo,
-                        'remetente_id' => $mensagem->remetente_id,
-                        'data_envio' => $mensagem->created_at->format('Y-m-d H:i:s'),
-                        'eh_meu' => $mensagem->remetente_id == $userId
-                    ];
-                })
+                'id' => $mensagem->id,
+                'conteudo' => $mensagem->conteudo,
+                'remetente_id' => $mensagem->remetente_id,
+                'data_envio' => $mensagem->created_at->format('Y-m-d H:i:s'),
+                'eh_meu' => $mensagem->remetente_id == $userId
             ];
-        });
+        })
+    ];
     
     return response()->json([
         'success' => true,
-        'data' => $conversas
+        'data' => $conversaDetalhada
     ]);
 }
+
+ /**
+  * 
+  */
+  public function listarMensagens($conversaId)
+  {
+      // Verifica se a conversa existe
+      $conversa = Conversa::find($conversaId);
+      
+      if (!$conversa) {
+          return response()->json([
+              'success' => false,
+              'message' => 'Conversa não encontrada'
+          ], 404);
+      }
+
+      // Busca as mensagens da conversa com informações básicas do remetente
+      $mensagens = Mensagens::where('conversa_id', $conversaId)
+          ->with(['remetente:id,name,avatar'])
+          ->orderBy('enviado_em', 'asc')
+          ->get();
+
+      return response()->json([
+          'success' => true,
+          'conversa_id' => $conversaId,
+          'total_mensagens' => $mensagens->count(),
+          'mensagens' => $mensagens
+      ]);
+  }
 
     /**
      * Store a newly created resource in storage.

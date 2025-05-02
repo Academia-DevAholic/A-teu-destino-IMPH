@@ -30,7 +30,11 @@ class Solicitacao extends Model
     {
         return $this->belongsTo(Entregador::class, 'id_entregador');
     }
-
+// Relacionamento com o entregador
+public function entregador()
+{
+    return $this->belongsTo(Entregador::class, 'id_entregador');
+}
     
 
     public function aceitar(Entregador $entregador)

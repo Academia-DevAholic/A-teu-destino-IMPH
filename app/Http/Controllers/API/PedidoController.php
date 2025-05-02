@@ -18,20 +18,74 @@ class PedidoController extends Controller
     // Metodo para listar pedido
     public function index(Request $request)
 {
-    // Cria a query base
-    $query = Pedido::query();
-    
-    // Verifica se foi passado o parâmetro id_cliente
-    if ($request->has('id_cliente')) {
-        // Filtra os pedidos pelo ID do cliente
-        $query->where('id_cliente', $request->id_cliente);
+    try {
+        $query = Pedido::query()->with('solicitacoes');
+        $filters = [];
+        
+        // Filtro por ID do cliente
+        if ($request->has('id_cliente')) {
+            $filters['id_cliente'] = $request->id_cliente;
+            $query->where('id_cliente', $request->id_cliente);
+        }
+        
+        // Filtro por status do pedido
+        if ($request->has('status')) {
+            $status = strtolower($request->status);
+            
+            if (!in_array($status, ['aceite', 'pendente'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Status inválido',
+                    'errors' => ['status' => 'Deve ser "aceite" ou "pendente"']
+                ], 400);
+            }
+            
+            $filters['status'] = $status;
+            $query->where('status', $status);
+        }
+        
+        $pedidos = $query->get();
+        
+        if ($pedidos->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'data' => [],
+                'count' => 0,
+                'message' => 'Nenhum pedido encontrado',
+                'filters' => $filters
+            ]);
+        }
+        
+        // Formata os dados para incluir as solicitações
+        $formattedPedidos = $pedidos->map(function ($pedido) {
+            return [
+                'id' => $pedido->id,
+                'id_cliente' => $pedido->id_cliente,
+                'status' => $pedido->status,
+                'created_at' => $pedido->created_at,
+                'updated_at' => $pedido->updated_at,
+                'solicitacoes' => $pedido->solicitacoes,
+                'total_solicitacoes' => $pedido->solicitacoes->count()
+            ];
+        });
+        
+        return response()->json([
+            'success' => true,
+            'data' => $formattedPedidos,
+            'count' => $formattedPedidos->count(),
+            'filters' => $filters
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro no servidor',
+            'error' => $e->getMessage()
+        ], 500);
     }
-    
-    // Executa a query e retorna os resultados
-    $pedidos = $query->get();
-    
-    return $pedidos;
 }
+
+
     /**
      * Store a newly created resource in storage.
      */
@@ -41,13 +95,11 @@ class PedidoController extends Controller
            // Validação básica dos campos obrigatórios
            $request->validate([
                'id_cliente' => 'required|integer|exists:clientes,id',
-               'status' => 'required|in:pendente,em andamento,concluída'
            ]);
        
            try {
                $pedido = Pedido::create([
                    'id_cliente' => $request->id_cliente,
-                   'status' => $request->status
                ]);
                
        

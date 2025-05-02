@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_pedido')->constrained('pedidos')->onDelete('cascade');
             $table->foreignId('id_entregador')->constrained('entregadors'); // Nome correto da tabela
-            $table->enum('status', ['pendente', 'concluída'])->nullable();
+            $table->enum('status', ['pendente', 'aceite'])->nullable();
             $table->timestamps();
         });
     }

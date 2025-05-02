@@ -16,94 +16,118 @@ class SolicitacaoController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index(Request $request): JsonResponse
-{
-    try {
-        $query = Solicitacao::query();
-
-        // Filtro por id_entregador (se fornecido)
-        if ($request->has('id_entregador')) {
-            $idEntregador = $request->input('id_entregador');
-
-            // Verifica se o entregador existe
-            $entregadorExiste = Entregador::where('id', $idEntregador)->exists();
-
-            if (!$entregadorExiste) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Entregador não encontrado.',
-                    'error' => 'O ID do entregador (' . $idEntregador . ') não existe no banco de dados.'
-                ], 404); // HTTP 404 = Not Found
+    public function index(Request $request): JsonResponse
+    {
+        try {
+            $query = Solicitacao::query();
+    
+            // Filtro por id_entregador (se fornecido)
+            if ($request->has('id_entregador')) {
+                $idEntregador = $request->input('id_entregador');
+    
+                // Verifica se o entregador existe
+                $entregadorExiste = Entregador::where('id', $idEntregador)->exists();
+    
+                if (!$entregadorExiste) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Entregador não encontrado.',
+                        'error' => 'O ID do entregador (' . $idEntregador . ') não existe no banco de dados.'
+                    ], 404); // HTTP 404 = Not Found
+                }
+    
+                // Se existir, filtra as solicitações
+                $query->where('id_entregador', $idEntregador);
             }
-
-            // Se existir, filtra as solicitações
-            $query->where('id_entregador', $idEntregador);
-        }
-
-        // Filtro por id_pedido (se fornecido)
-        if ($request->has('id_pedido')) {
-            $idPedido = $request->input('id_pedido');
-
-            // Verifica se o pedido existe
-            $pedidoExiste = Pedido::where('id', $idPedido)->exists();
-
-            if (!$pedidoExiste) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Pedido não encontrado.',
-                    'error' => 'O ID do pedido (' . $idPedido . ') não existe no banco de dados.'
-                ], 404);
+    
+            // Filtro por id_pedido (se fornecido)
+            if ($request->has('id_pedido')) {
+                $idPedido = $request->input('id_pedido');
+    
+                // Verifica se o pedido existe
+                $pedidoExiste = Pedido::where('id', $idPedido)->exists();
+    
+                if (!$pedidoExiste) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Pedido não encontrado.',
+                        'error' => 'O ID do pedido (' . $idPedido . ') não existe no banco de dados.'
+                    ], 404);
+                }
+    
+                // Se existir, filtra as solicitações
+                $query->where('id_pedido', $idPedido);
             }
-
-            // Se existir, filtra as solicitações
-            $query->where('id_pedido', $idPedido);
-        }
-
-        // Carrega relacionamentos (se existirem)
-        if (method_exists(Solicitacao::class, 'pedido')) {
-            $query->with('pedido');
-        }
-
-        if (method_exists(Solicitacao::class, 'entregador')) {
-            $query->with('entregador');
-        }
-
-        $solicitacoes = $query->get();
-
-        // Se filtrou por entregador mas não há solicitações
-        if ($request->has('id_entregador') && $solicitacoes->isEmpty()) {
+    
+            // Filtro por status (se fornecido)
+            if ($request->has('status')) {
+                $status = $request->input('status');
+                
+                // Valida se o status é válido
+                if (!in_array($status, ['aceitar', 'pendente', 'rejeitar'])) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Status inválido.',
+                        'error' => 'O status deve ser "aceitar", "pendente" ou rejeitar.'
+                    ], 400); // HTTP 400 = Bad Request
+                }
+                
+                $query->where('status', $status);
+            }
+    
+            // Carrega relacionamentos (se existirem)
+            if (method_exists(Solicitacao::class, 'pedido')) {
+                $query->with('pedido');
+            }
+    
+            if (method_exists(Solicitacao::class, 'entregador')) {
+                $query->with('entregador');
+            }
+    
+            $solicitacoes = $query->get();
+    
+            // Se filtrou por entregador mas não há solicitações
+            if ($request->has('id_entregador') && $solicitacoes->isEmpty()) {
+                return response()->json([
+                    'success' => true,
+                    'data' => [],
+                    'message' => 'Não há solicitações para este entregador (ID: ' . $idEntregador . ').'
+                ], 200);
+            }
+    
+            // Se filtrou por pedido mas não há solicitações
+            if ($request->has('id_pedido') && $solicitacoes->isEmpty()) {
+                return response()->json([
+                    'success' => true,
+                    'data' => [],
+                    'message' => 'Não há solicitações para este pedido (ID: ' . $idPedido . ').'
+                ], 200);
+            }
+    
+            // Se filtrou por status mas não há solicitações
+            if ($request->has('status') && $solicitacoes->isEmpty()) {
+                return response()->json([
+                    'success' => true,
+                    'data' => [],
+                    'message' => 'Não há solicitações com status "' . $status . '".'
+                ], 200);
+            }
+    
+            // Retorno padrão (sucesso)
             return response()->json([
                 'success' => true,
-                'data' => [],
-                'message' => 'Não há solicitações para este entregador (ID: ' . $idEntregador . ').'
+                'data' => $solicitacoes,
+                'message' => 'Solicitações listadas com sucesso.'
             ], 200);
-        }
-
-        // Se filtrou por pedido mas não há solicitações
-        if ($request->has('id_pedido') && $solicitacoes->isEmpty()) {
+    
+        } catch (\Exception $e) {
             return response()->json([
-                'success' => true,
-                'data' => [],
-                'message' => 'Não há solicitações para este pedido (ID: ' . $idPedido . ').'
-            ], 200);
+                'success' => false,
+                'message' => 'Erro ao buscar solicitações.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        // Retorno padrão (sucesso)
-        return response()->json([
-            'success' => true,
-            'data' => $solicitacoes,
-            'message' => 'Solicitações listadas com sucesso.'
-        ], 200);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Erro ao buscar solicitações.',
-            'error' => $e->getMessage()
-        ], 500);
     }
-}
-
     /**
      * Store a newly created resource in storage.
      */
@@ -114,13 +138,9 @@ class SolicitacaoController extends Controller
         $validatedData = $request->validate([
             'id_pedido' => 'required|integer|exists:pedidos,id',
             'id_entregador' => 'required|integer|exists:entregadors,id',
-            'status' => [
-                'required',
-                'string',
-                Rule::in(['pendente', 'concluido']),
-            ],
+           
         ], [
-            'status.required' => 'O campo status é obrigatório.',
+            //'status.required' => 'O campo status é obrigatório.',
             'status.in' => 'O status deve ser "pendente" ou "concluido".',
             'id_pedido.exists' => 'O pedido especificado não existe.',
             'id_entregador.exists' => 'O entregador especificado não existe.',
@@ -181,14 +201,7 @@ public function update(Request $request, string $id): JsonResponse
         $validatedData = $request->validate([
             'id_pedido' => 'required|integer',
             'id_entregador' => 'required|integer',
-            'status' => [
-                'required',
-                'string',
-                Rule::in(['pendente', 'concluido']),
-            ],
-        ], [
-            'status.required' => 'O campo status é obrigatório.',
-            'status.in' => 'O status deve ser "pendente" ou "concluido".',
+           
         ]);
 
         // Busca a solicitação ou retorna erro 404 se não existir
@@ -255,60 +268,97 @@ public function update(Request $request, string $id): JsonResponse
  * Método para atualizar o status da solicitação verificando se o usuário logado é o entregador
  */
 public function atualizarStatus(Request $request, $solicitacaoId)
-    {
-        // Validação dos dados de entrada
-        $request->validate([
-            'novoStatus' => 'required|string|in:concluida', // Só permite "concluida"
+{
+    $request->validate([
+        'novoStatus' => 'required|string|in:aceitar,rejeitar',
+    ]);
+
+    DB::beginTransaction();
+    try {
+        // Carrega a solicitação com o pedido e o entregador
+        $solicitacao = Solicitacao::with(['pedido', 'entregador.user'])->findOrFail($solicitacaoId);
+
+        // Verifica apenas se o usuário logado é o entregador associado
+        if (!$solicitacao->entregador || $solicitacao->entregador->id_usuario !== auth()->id()) {
+            throw new \Exception('Apenas o entregador designado pode atualizar esta solicitação.');
+        }
+
+        // Atualiza o status da solicitação (sem verificar o status anterior)
+        $solicitacao->status = $request->novoStatus; // "aceitar" ou "rejeitar"
+        $solicitacao->save();
+
+        // Atualiza o pedido apenas se for "aceitar"
+        if ($request->novoStatus === 'aceitar') {
+            $solicitacao->pedido->status = 'aceitar'; // Certifique-se que esse valor é válido no BD
+            $solicitacao->pedido->save();
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status atualizado com sucesso',
+            'data' => $solicitacao
         ]);
 
-        // Busca a solicitação
-        $solicitacao = Solicitacao::with('entregadors')->findOrFail($solicitacaoId);
-        $usuarioLogadoId = auth()->id();
-
-        // Regra 1: Só permite transição de "pendente" → "concluida"
-        if ($solicitacao->status !== 'pendente') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Só é possível concluir solicitações pendentes.'
-            ], 400);
-        }
-
-        if ($request->novoStatus !== 'concluida') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Status inválido. Use "concluida".'
-            ], 400);
-        }
-
-        // Regra 2: Verifica se o entregador associado é o usuário logado
-        if (!$solicitacao->entregadors || $solicitacao->entregadors->id_usuario !== $usuarioLogadoId) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Apenas o entregador designado pode concluir esta solicitação.'
-            ], 403);
-        }
-
-        // Atualiza e salva
-        try {
-            DB::beginTransaction();
-            
-            $solicitacao->status = 'concluida';
-            $solicitacao->save();
-            
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Status atualizado com sucesso',
-                'data' => $solicitacao
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Erro ao atualizar status: ' . $e->getMessage()
-            ], 500);
-        }
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro ao atualizar status: ' . $e->getMessage()
+        ], 500);
     }
+}
+/*
+public function atualizarStatus(Request $request, $solicitacaoId)
+{
+    // Validação dos dados de entrada
+    $request->validate([
+        'novoStatus' => 'required|string|in:aceitar,rejeitar', // Permite "aceitar" ou "rejeitar"
+    ]);
+
+    // Busca a solicitação com o entregador associado
+    $solicitacao = Solicitacao::with('entregador.user')->findOrFail($solicitacaoId);
+    $usuarioLogadoId = auth()->id();
+
+    // Regra 1: Só permite transição se o status atual for "pendente"
+    if ($solicitacao->status !== 'pendente') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Só é possível atualizar solicitações pendentes.'
+        ], 400);
+    }
+
+    // Regra 2: Verifica se o usuário logado é o entregador associado
+    if (!$solicitacao->entregador || $solicitacao->entregador->id_usuario !== $usuarioLogadoId) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Apenas o entregador designado pode atualizar esta solicitação.'
+        ], 403);
+    }
+
+    // Atualiza e salva
+    try {
+        DB::beginTransaction();
+        
+        $solicitacao->status = $request->novoStatus; // Pode ser "aceitar" ou "rejeitar"
+        $solicitacao->save();
+        
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status atualizado com sucesso',
+            'data' => $solicitacao
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro ao atualizar status: ' . $e->getMessage()
+        ], 500);
+    }
+}
+*/
 }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_cliente');
-            $table->enum('status', ['pendente', 'em andamento', 'concluída']);
+            $table->enum('status', ['pendente', 'aceite']);
             $table->timestamps();
 
               // Definindo a chave estrangeira

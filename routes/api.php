@@ -7,6 +7,7 @@ use App\Http\Controllers\API\EncomendaController;
 use App\Http\Controllers\API\EntregadorController;
 use App\Http\Controllers\API\ProdutoController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\API\VeiculoController;
 use App\Http\Controllers\API\ConversasController;
 use App\Http\Controllers\API\TipoEncomendaController;
@@ -53,7 +54,7 @@ Route::delete('/eliminar_cliente/{id}', [ClienteController::class, 'destroy']);
 //==============CRUD DE CONVERSAS=======//
 Route::get('listar_conversas', [ConversasController::class, 'index']);
 Route::post('cadastro_conversas', [ConversasController::class, 'store']);
-Route::get('/detalhar_conversas/{id}', [ConversasController::class, 'show']);
+//Route::get('/detalhar_conversas/{id}', [ConversasController::class, 'detalharConversa']);
 Route::put('/atualizar_conversas/{id}', [ConversasController::class, 'update']);
 Route::delete('/eliminar_conversas/{id}', [ConversasController::class, 'destroy']);
 Route::post('/enviar_coversas', [ConversasController::class, 'enviarMensagem']);
@@ -61,12 +62,19 @@ Route::post('/visualizar_convrsas/{id}', [ConversasController::class, 'marcarCom
 Route::patch('/conversas/{id}/visualizar', [ConversasController::class, 'marcarComoVisualizada']);
 
 //Enviar Mensagem
+
+
+// Rotas SEM autenticação (totalmente públicas)
+Route::get('/conversas/{conversaId}/mensagens', [MensagemController::class, 'listarMensagennvs']);
 Route::post('/enviar_mensagem', [ConversasController::class, 'enviarMensagem'])
      ->middleware('auth:sanctum');
-Route::get('/listar_mensagem', [ConversasController::class, 'listarMensagens'])
+Route::get('/listar_mensagem/{id}', [ConversasController::class, 'listarMensagens'])
      ->middleware('auth:sanctum');
 
 Route::get('/conversas', [ConversasController::class, 'listarConversas'])
+     ->middleware('auth:sanctum');
+
+Route::get('/detalhar_conversas/{id}', [ConversasController::class, 'detalharConversa'])
      ->middleware('auth:sanctum');
 
      Route::put('/solicitacoes/{id}/atualizar-status', [SolicitacaoController::class, 'atualizarStatus'])
@@ -127,7 +135,8 @@ Route::delete('/eliminar_produto/{id}', [ProdutoController::class, 'destroy']);
                 //===========CRUD do Auth===========//
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);  
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/listar', [UsuarioController::class, 'listar']);
 
             //==============CRUD DO PEDIDO===========//
 Route::get('/listar_pedido', [PedidoController::class, 'index']);

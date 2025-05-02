@@ -59,4 +59,5 @@ public function mensagens()
 {
     return $this->hasMany(Mensagens::class, 'conversa_id');
 }
+
 }

@@ -31,4 +31,6 @@ class Mensagens extends Model
     {
         return $this->belongsTo(User::class, 'remetente_id');
     }
+    
+
 }
